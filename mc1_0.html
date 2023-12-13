@@ -68,72 +68,8 @@
 		pointer: 0
 	};
 	var curMatrixMode = 0;
-debugger;
+	// NOTE: These initializes to identity
 	var matrixData = [ glMatrix.mat4.create(), glMatrix.mat4.create() ];
-	// Matrixes are coloumn major
-	function identityMatrix(mat)
-	{
-debugger;
-		mat[0] = 1;
-		mat[1] = 0;
-		mat[2] = 0;
-		mat[3] = 0;
-
-		mat[4] = 0;
-		mat[5] = 1;
-		mat[6] = 0;
-		mat[7] = 0;
-
-		mat[8] = 0;
-		mat[9] = 0;
-		mat[10] = 1;
-		mat[11] = 0;
-
-		mat[12] = 0;
-		mat[13] = 0;
-		mat[14] = 0;
-		mat[15] = 1;
-	}
-	function translateMatrix(mat, x, y, z)
-	{
-debugger;
-		mat[0] = 1;
-		mat[1] = 0;
-		mat[2] = 0;
-		mat[3] = 0;
-
-		mat[4] = 0;
-		mat[5] = 1;
-		mat[6] = 0;
-		mat[7] = 0;
-
-		mat[8] = 0;
-		mat[9] = 0;
-		mat[10] = 1;
-		mat[11] = 0;
-
-		mat[12] = x;
-		mat[13] = y;
-		mat[14] = z;
-		mat[15] = 1;
-	}
-	function multiplyMatrix(a, b)
-	{
-debugger;
-		var ret = new Float32Array(16);
-		for(var row = 0; row < 4; row++)
-		{
-			for(var col = 0; col < 4; col++)
-			{
-				ret[col * 4 + row] =
-					a[0 * 4 + row] * b[col * 4 + 0] +
-					a[1 * 4 + row] * b[col * 4 + 1] +
-					a[2 * 4 + row] * b[col * 4 + 2] +
-					a[3 * 4 + row] * b[col * 4 + 3];
-			}
-		}
-		return ret;
-	}
 	function uploadData(v, data, buffer, attributeLocation, count)
 	{
 		if(data.enabled)
@@ -151,11 +87,6 @@ debugger;
 			mcCtx.disableVertexAttribArray(attributeLocation);
 		}
 	}
-	identityMatrix(matrixData[0]);
-	identityMatrix(matrixData[1]);
-debugger;
-	mcCtx.uniformMatrix4fv(mvLocation, false, matrixData[0]);
-	mcCtx.uniformMatrix4fv(projLocation, false, matrixData[1]);
 	// Fix the sampler to texture unit 0
 	mcCtx.uniform1i(samplerLocation, 0);
 	var curList = null;
@@ -356,47 +287,24 @@ debugger;
 		Java_org_lwjgl_opengl_GL11_nglLoadIdentity(lib, funcPtr)
 		{
 			assert(curList == null);
-			identityMatrix(matrixData[curMatrixMode]);
+			glMatrix.mat4.identity(matrixData[curMatrixMode]);
 		},
 		Java_org_lwjgl_opengl_GL11_nglOrtho(lib, left, right, bottom, top, nearVal, farVal, funcPtr)
 		{
-debugger;
 			assert(curList == null);
 			var m = matrixData[curMatrixMode];
-			var orthoMatrix = new Float32Array(16);
-			var tx = - (right + left) / (right - left);
-			var ty = - (top + bottom) / (top - bottom);
-			var tz = - (farVal + nearVal) / (farVal - nearVal);
-			orthoMatrix[0] = 2 / (right - left);
-			orthoMatrix[1] = 0;
-			orthoMatrix[2] = 0;
-			orthoMatrix[3] = 0;
-			
-			orthoMatrix[4] = 0;
-			orthoMatrix[5] = 2 / (top - bottom);
-			orthoMatrix[6] = 0;
-			orthoMatrix[7] = 0;
-
-			orthoMatrix[8] = 0;
-			orthoMatrix[9] = 0;
-			orthoMatrix[10] = -2 / (farVal - nearVal);
-			orthoMatrix[11] = 0;
-
-			orthoMatrix[12] = tx;
-			orthoMatrix[13] = ty;
-			orthoMatrix[14] = tz;
-			orthoMatrix[15] = 1;
-			matrixData[curMatrixMode] = multiplyMatrix(m, orthoMatrix);
+			var o = glMatrix.mat4.create();
+			glMatrix.mat4.ortho(o, left, right, bottom, top, nearVal, farVal);
+			var out = glMatrix.mat4.create();
+			matrixData[curMatrixMode] = glMatrix.mat4.multiply(out, m, o);
 		},
 		Java_org_lwjgl_opengl_GL11_nglTranslatef(lib, x, y, z, funcPtr)
 		{
-debugger;
 			if(curList)
 				return;
 			var m = matrixData[curMatrixMode];
-			var t = new Float32Array(16);
-			translateMatrix(t, x, y, z);
-			matrixData[curMatrixMode] = multiplyMatrix(m, t);
+			var out = glMatrix.mat4.create();
+			matrixData[curMatrixMode] = glMatrix.mat4.translate(out, m, glMatrix.vec3.fromValues(x, y, z));
 		},
 		Java_org_lwjgl_opengl_GL11_nglViewport(lib, x, y, width, height, funcPtr)
 		{
@@ -490,7 +398,6 @@ debugger;
 			if(curList)
 				return;
 			// TODO: Conditional
-debugger;
 			mcCtx.uniformMatrix4fv(mvLocation, false, matrixData[0]);
 			mcCtx.uniformMatrix4fv(projLocation, false, matrixData[1]);
 			// We can render each quad a separate GL_TRIANGLE_FAN
