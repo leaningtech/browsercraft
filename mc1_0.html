@@ -431,7 +431,7 @@
 			// Upload tex coord data
 			uploadData(v, texCoordData, texCoordBuffer, texCoord, count);
 			for(var i=0;i<count;i+=4)
-				mcCtx.drawArrays(mcCtx.TRIANGLE_FAN, i, count);
+				mcCtx.drawArrays(mcCtx.TRIANGLE_FAN, i, 4);
 		},
 		Java_org_lwjgl_opengl_GL11_nglDisableClientState(lib, v, funcPtr)
 		{
