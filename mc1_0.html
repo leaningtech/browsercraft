@@ -69,7 +69,17 @@
 	};
 	var curMatrixMode = 0;
 	// NOTE: These initializes to identity
-	var matrixData = [ glMatrix.mat4.create(), glMatrix.mat4.create() ];
+	var projMatrixStack = [glMatrix.mat4.create()];
+	var modelViewMatrixStack = [glMatrix.mat4.create()];
+	var curMatrixStack = modelViewMatrixStack;
+	function getCurMatrixTop()
+	{
+		return curMatrixStack[curMatrixStack.length - 1];
+	}
+	function setCurMatrixTop(m)
+	{
+		curMatrixStack[curMatrixStack.length - 1] = m;
+	}
 	function uploadData(v, data, buffer, attributeLocation, count)
 	{
 		if(data.enabled)
@@ -278,33 +288,33 @@
 		{
 			assert(curList == null);
 			if(matrixMode == 0x1700/*GL_MODELVIEW*/)
-				curMatrixMode = 0;
+				curMatrixStack = modelViewMatrixStack;
 			else if(matrixMode == 0x1701/*GL_PROJECTION*/)
-				curMatrixMode = 1;
+				curMatrixStack = projMatrixStack;
 			else
 				debugger;
 		},
 		Java_org_lwjgl_opengl_GL11_nglLoadIdentity(lib, funcPtr)
 		{
 			assert(curList == null);
-			glMatrix.mat4.identity(matrixData[curMatrixMode]);
+			glMatrix.mat4.identity(getCurMatrixTop());
 		},
 		Java_org_lwjgl_opengl_GL11_nglOrtho(lib, left, right, bottom, top, nearVal, farVal, funcPtr)
 		{
 			assert(curList == null);
-			var m = matrixData[curMatrixMode];
+			var m = getCurMatrixTop();
 			var o = glMatrix.mat4.create();
 			glMatrix.mat4.ortho(o, left, right, bottom, top, nearVal, farVal);
 			var out = glMatrix.mat4.create();
-			matrixData[curMatrixMode] = glMatrix.mat4.multiply(out, m, o);
+			setCurMatrixTop(glMatrix.mat4.multiply(out, m, o));
 		},
 		Java_org_lwjgl_opengl_GL11_nglTranslatef(lib, x, y, z, funcPtr)
 		{
 			if(curList)
 				return;
-			var m = matrixData[curMatrixMode];
+			var m = getCurMatrixTop();
 			var out = glMatrix.mat4.create();
-			matrixData[curMatrixMode] = glMatrix.mat4.translate(out, m, glMatrix.vec3.fromValues(x, y, z));
+			setCurMatrixTop(glMatrix.mat4.translate(out, m, glMatrix.vec3.fromValues(x, y, z)));
 		},
 		Java_org_lwjgl_opengl_GL11_nglViewport(lib, x, y, width, height, funcPtr)
 		{
@@ -398,8 +408,8 @@
 			if(curList)
 				return;
 			// TODO: Conditional
-			mcCtx.uniformMatrix4fv(mvLocation, false, matrixData[0]);
-			mcCtx.uniformMatrix4fv(projLocation, false, matrixData[1]);
+			mcCtx.uniformMatrix4fv(mvLocation, false, modelViewMatrixStack[modelViewMatrixStack.length - 1]);
+			mcCtx.uniformMatrix4fv(projLocation, false, projMatrixStack[projMatrixStack.length - 1]);
 			// We can render each quad a separate GL_TRIANGLE_FAN
 			assert(mode == 7/*QUADS*/ && (count % 4) == 0);
 			assert(first == 0);
@@ -485,15 +495,15 @@
 			assert(curList == null);
 			console.log("glCullFace");
 		},
-		Java_org_lwjgl_opengl_GL11_nglPushMatrix()
+		Java_org_lwjgl_opengl_GL11_nglPushMatrix(lib, funcPtr)
 		{
 			assert(curList == null);
-			console.log("glPushMatrix");
+			curMatrixStack.push(glMatrix.mat4.clone(curMatrixStack[curMatrixStack.length - 1]));
 		},
-		Java_org_lwjgl_opengl_GL11_nglPopMatrix()
+		Java_org_lwjgl_opengl_GL11_nglPopMatrix(lib, funcPtr)
 		{
 			assert(curList == null);
-			console.log("glPopMatrix");
+			curMatrixStack.pop();
 		},
 		Java_org_lwjgl_opengl_GL11_nglMultMatrixf()
 		{
