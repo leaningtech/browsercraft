@@ -12,7 +12,7 @@
    </div>
    <script>
 	var mcCanvas = document.getElementById("mc");
-	var mcCtx = mcCanvas.getContext("webgl");
+	var mcCtx = mcCanvas.getContext("webgl2", {antialias: false});
 	var vertexShaderSrc = `
 		attribute vec4 aVertexPosition;
 		attribute vec2 aTexCoord;
@@ -103,6 +103,15 @@
 	var cmdLists = [null];
 	// The first null implicitly solves resetting on 0 id
 	var textureObjects = [null];
+	// We need to use an FBO as the main target to support copyTexSubImage2D that seems broken otherwise
+	var fbTexture = mcCtx.createTexture();
+	mcCtx.bindTexture(mcCtx.TEXTURE_2D, fbTexture);
+	mcCtx.texImage2D(mcCtx.TEXTURE_2D, 0, mcCtx.RGBA, 1024, 768, 0, mcCtx.RGBA, mcCtx.UNSIGNED_BYTE, null);
+	mcCtx.bindTexture(mcCtx.TEXTURE_2D, null);
+	var mainFb = mcCtx.createFramebuffer();
+	mcCtx.bindFramebuffer(mcCtx.READ_FRAMEBUFFER, mainFb);
+	mcCtx.bindFramebuffer(mcCtx.DRAW_FRAMEBUFFER, mainFb);
+	mcCtx.framebufferTexture2D(mcCtx.FRAMEBUFFER, mcCtx.COLOR_ATTACHMENT0, mcCtx.TEXTURE_2D, fbTexture, 0);
 	var mcNatives =
 	{
 		Java_org_lwjgl_DefaultSysImplementation_getPointerSize()
@@ -275,6 +284,9 @@
 		Java_org_lwjgl_opengl_LinuxContextImplementation_nSwapBuffers()
 		{
 			console.warn("SwapBuffer");
+			mcCtx.bindFramebuffer(mcCtx.DRAW_FRAMEBUFFER, null);
+			mcCtx.blitFramebuffer(0, 0, 1024, 768, 0, 0, 1024, 768, mcCtx.COLOR_BUFFER_BIT, mcCtx.NEAREST);
+			mcCtx.bindFramebuffer(mcCtx.DRAW_FRAMEBUFFER, mainFb);
 			return new Promise(function(f, r)
 			{
 				requestAnimationFrame(f);
@@ -533,6 +545,10 @@
 		Java_org_lwjgl_opengl_GL11_nglCopyTexSubImage2D(lib, target, level, xoffset, yoffset, x, y, width, height, funcPtr)
 		{
 			assert(curList == null);
+			// TODO: Remove this debug blitting
+			mcCtx.bindFramebuffer(mcCtx.DRAW_FRAMEBUFFER, null);
+			mcCtx.blitFramebuffer(0, 0, 1024, 768, 0, 0, 1024, 768, mcCtx.COLOR_BUFFER_BIT, mcCtx.NEAREST);
+			mcCtx.bindFramebuffer(mcCtx.DRAW_FRAMEBUFFER, mainFb);
 debugger;
 			mcCtx.copyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height);
 		},
