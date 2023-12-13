@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en" style="width:100%;height:100%;">
+  <head>
+    <meta charset="utf-8">
+    <title>CJ3 test</title>
+    <script src="https://127.0.0.1:8084/cj3loader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js" referrerpolicy="no-referrer"></script>
+  </head>
+  <body style="width:100%;height:100%;margin:0;">
+   <canvas id="mc" width="1024" height="768"></canvas>
+   <div id="display" style="width:100%;height:100%;position:absolute;top:0;left:1024px;">
+   </div>
+   <script>
+	var mcCanvas = document.getElementById("mc");
+	var mcCtx = mcCanvas.getContext("webgl");
+	var vertexShaderSrc = `
+		attribute vec4 aVertexPosition;
+		attribute vec2 aTexCoord;
+		uniform mat4 modelView;
+		uniform mat4 projection;
+		varying vec2 vTexCoord;
+		void main() {
+			gl_Position = projection * modelView * aVertexPosition;
+			vTexCoord = aTexCoord;
+		}
+	`;
+	var fragmentShaderSrc = `
+		precision mediump float;
+		uniform sampler2D uSampler;
+		varying vec2 vTexCoord;
+		void main() {
+			vec4 texSample = texture2D(uSampler, vTexCoord);
+			gl_FragColor = vec4(texSample.r, texSample.g, texSample.b, 1.0);
+		}
+	`;
+	var vertexShader = mcCtx.createShader(mcCtx.VERTEX_SHADER);
+	mcCtx.shaderSource(vertexShader, vertexShaderSrc);
+	mcCtx.compileShader(vertexShader);
+	var fragmentShader = mcCtx.createShader(mcCtx.FRAGMENT_SHADER);
+	mcCtx.shaderSource(fragmentShader, fragmentShaderSrc);
+	mcCtx.compileShader(fragmentShader);
+	var program = mcCtx.createProgram();
+	mcCtx.attachShader(program, vertexShader);
+	mcCtx.attachShader(program, fragmentShader);
+	mcCtx.linkProgram(program);
+	mcCtx.useProgram(program);
+	var vertexBuffer = mcCtx.createBuffer();
+	var texCoordBuffer = mcCtx.createBuffer();
+	var vertexPosition = mcCtx.getAttribLocation(program, "aVertexPosition");
+	var texCoord = mcCtx.getAttribLocation(program, "aTexCoord");
+	var mvLocation = mcCtx.getUniformLocation(program, "modelView");
+	var projLocation = mcCtx.getUniformLocation(program, "projection");
+	var samplerLocation = mcCtx.getUniformLocation(program, "uSampler");
+	var vertexData =
+	{
+		enabled: false,
+		size: 0,
+		type: 0,
+		stride: 0,
+		pointer: 0
+	};
+	var texCoordData =
+	{
+		enabled: false,
+		size: 0,
+		type: 0,
+		stride: 0,
+		pointer: 0
+	};
+	var curMatrixMode = 0;
+debugger;
+	var matrixData = [ glMatrix.mat4.create(), glMatrix.mat4.create() ];
+	// Matrixes are coloumn major
+	function identityMatrix(mat)
+	{
+debugger;
+		mat[0] = 1;
+		mat[1] = 0;
+		mat[2] = 0;
+		mat[3] = 0;
+
+		mat[4] = 0;
+		mat[5] = 1;
+		mat[6] = 0;
+		mat[7] = 0;
+
+		mat[8] = 0;
+		mat[9] = 0;
+		mat[10] = 1;
+		mat[11] = 0;
+
+		mat[12] = 0;
+		mat[13] = 0;
+		mat[14] = 0;
+		mat[15] = 1;
+	}
+	function translateMatrix(mat, x, y, z)
+	{
+debugger;
+		mat[0] = 1;
+		mat[1] = 0;
+		mat[2] = 0;
+		mat[3] = 0;
+
+		mat[4] = 0;
+		mat[5] = 1;
+		mat[6] = 0;
+		mat[7] = 0;
+
+		mat[8] = 0;
+		mat[9] = 0;
+		mat[10] = 1;
+		mat[11] = 0;
+
+		mat[12] = x;
+		mat[13] = y;
+		mat[14] = z;
+		mat[15] = 1;
+	}
+	function multiplyMatrix(a, b)
+	{
+debugger;
+		var ret = new Float32Array(16);
+		for(var row = 0; row < 4; row++)
+		{
+			for(var col = 0; col < 4; col++)
+			{
+				ret[col * 4 + row] =
+					a[0 * 4 + row] * b[col * 4 + 0] +
+					a[1 * 4 + row] * b[col * 4 + 1] +
+					a[2 * 4 + row] * b[col * 4 + 2] +
+					a[3 * 4 + row] * b[col * 4 + 3];
+			}
+		}
+		return ret;
+	}
+	function uploadData(v, data, buffer, attributeLocation, count)
+	{
+		if(data.enabled)
+		{
+			assert(data.type == mcCtx.FLOAT);
+			assert(data.stride);
+			var buf = new Float32Array(v.buffer, data.pointer, (data.stride >> 2) * count);
+			mcCtx.bindBuffer(mcCtx.ARRAY_BUFFER, buffer);
+			mcCtx.bufferData(mcCtx.ARRAY_BUFFER, buf, mcCtx.STATIC_DRAW);
+			mcCtx.vertexAttribPointer(attributeLocation, data.size, data.type, false, data.stride, 0);
+			mcCtx.enableVertexAttribArray(attributeLocation);
+		}
+		else
+		{
+			mcCtx.disableVertexAttribArray(attributeLocation);
+		}
+	}
+	identityMatrix(matrixData[0]);
+	identityMatrix(matrixData[1]);
+debugger;
+	mcCtx.uniformMatrix4fv(mvLocation, false, matrixData[0]);
+	mcCtx.uniformMatrix4fv(projLocation, false, matrixData[1]);
+	// Fix the sampler to texture unit 0
+	mcCtx.uniform1i(samplerLocation, 0);
+	var curList = null;
+	var cmdLists = [null];
+	// The first null implicitly solves resetting on 0 id
+	var textureObjects = [null];
+	var mcNatives =
+	{
+		Java_org_lwjgl_DefaultSysImplementation_getPointerSize()
+		{
+			return 4;
+		},
+		Java_org_lwjgl_DefaultSysImplementation_getJNIVersion()
+		{
+			return 19;
+		},
+		Java_org_lwjgl_DefaultSysImplementation_setDebug()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxEvent_createEventBuffer()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxDisplay_nLockAWT()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxDisplay_nUnlockAWT()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxDisplay_setErrorHandler()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxDisplay_openDisplay()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxDisplay_nInternAtom()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxDisplay_nIsXrandrSupported()
+		{
+			return 0;
+		},
+		Java_org_lwjgl_opengl_LinuxDisplay_nIsXF86VidModeSupported()
+		{
+			return 1;
+		},
+		Java_org_lwjgl_opengl_LinuxDisplay_nGetDefaultScreen()
+		{
+			return 0;
+		},
+		async Java_org_lwjgl_opengl_LinuxDisplay_nGetAvailableDisplayModes(lib)
+		{
+			var DisplayMode = await lib.org.lwjgl.opengl.DisplayMode;
+			var d = await new DisplayMode(1024, 768);
+			return [d];
+		},
+		Java_org_lwjgl_opengl_LinuxDisplay_nGetCurrentGammaRamp()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxPeerInfo_createHandle()
+		{
+		},
+		Java_org_lwjgl_opengl_GLContext_nLoadOpenGLLibrary()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxDisplayPeerInfo_initDefaultPeerInfo()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxDisplayPeerInfo_initDrawable()
+		{
+		},
+		Java_org_lwjgl_opengl_AWTSurfaceLock_createHandle()
+		{
+		},
+		Java_org_lwjgl_opengl_AWTSurfaceLock_lockAndInitHandle()
+		{
+			return 1;
+		},
+		Java_org_lwjgl_opengl_LinuxAWTGLCanvasPeerInfo_getScreenFromSurfaceInfo()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxAWTGLCanvasPeerInfo_nInitHandle()
+		{
+		},
+		Java_org_lwjgl_opengl_AWTSurfaceLock_nUnlock()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxPeerInfo_nGetDrawable()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxDisplay_nCreateWindow()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxDisplay_mapRaised()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxDisplay_nCreateBlankCursor()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxDisplay_nSetTitle()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxMouse_nGetButtonCount()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxMouse_nQueryPointer()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxMouse_nGetWindowHeight()
+		{
+			return 768;
+		},
+		Java_org_lwjgl_opengl_LinuxKeyboard_getModifierMapping()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxKeyboard_nSetDetectableKeyRepeat()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxKeyboard_openIM()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxKeyboard_allocateComposeStatus()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxContextImplementation_nCreate()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxContextImplementation_nMakeCurrent()
+		{
+		},
+		Java_org_lwjgl_opengl_GLContext_ngetFunctionAddress(lib, stringPtr)
+		{
+			// Return any non-zero address, methods are called by name anyway
+			return 1;
+		},
+		Java_org_lwjgl_opengl_GL11_nglGetString(lib, id, funcPtr)
+		{
+			assert(curList == null);
+			// Special case GL_EXTENSION for now
+			if(id == 0x1F03)
+			{
+				// TODO: Do we need any?
+				return "";
+			}
+			else
+			{
+				return mcCtx.getParameter(id);
+			}
+		},
+		Java_org_lwjgl_opengl_GL11_nglGetIntegerv(lib, id, memPtr, funcPtr)
+		{
+			assert(curList == null);
+			var d = lib.getJNIDataView();
+			var ret = gl4es.getInteger(id);
+			//d.setInt32(Number(memPtr), ret, true);
+			console.log("glGetInteger", id);
+		},
+		Java_org_lwjgl_opengl_GL11_nglGetError()
+		{
+			assert(curList == null);
+			// We like living dangerously
+			return 0;
+		},
+		Java_org_lwjgl_opengl_LinuxContextImplementation_nSetSwapInterval()
+		{
+		},
+		Java_org_lwjgl_opengl_GL11_nglClearColor(lib, r, g, b, a, funcPtr)
+		{
+			assert(curList == null);
+			return mcCtx.clearColor(r, g, b, a);
+		},
+		Java_org_lwjgl_opengl_GL11_nglClear(lib, a, funcPtr)
+		{
+			assert(curList == null);
+			mcCtx.clear(a);
+		},
+		Java_org_lwjgl_opengl_LinuxContextImplementation_nSwapBuffers()
+		{
+			console.warn("SwapBuffer");
+			return new Promise(function(f, r)
+			{
+				requestAnimationFrame(f);
+			});
+		},
+		Java_org_lwjgl_opengl_LinuxEvent_getPending()
+		{
+			return 0;
+		},
+		Java_org_lwjgl_opengl_GL11_nglMatrixMode(lib, matrixMode, funcPtr)
+		{
+			assert(curList == null);
+			if(matrixMode == 0x1700/*GL_MODELVIEW*/)
+				curMatrixMode = 0;
+			else if(matrixMode == 0x1701/*GL_PROJECTION*/)
+				curMatrixMode = 1;
+			else
+				debugger;
+		},
+		Java_org_lwjgl_opengl_GL11_nglLoadIdentity(lib, funcPtr)
+		{
+			assert(curList == null);
+			identityMatrix(matrixData[curMatrixMode]);
+		},
+		Java_org_lwjgl_opengl_GL11_nglOrtho(lib, left, right, bottom, top, nearVal, farVal, funcPtr)
+		{
+debugger;
+			assert(curList == null);
+			var m = matrixData[curMatrixMode];
+			var orthoMatrix = new Float32Array(16);
+			var tx = - (right + left) / (right - left);
+			var ty = - (top + bottom) / (top - bottom);
+			var tz = - (farVal + nearVal) / (farVal - nearVal);
+			orthoMatrix[0] = 2 / (right - left);
+			orthoMatrix[1] = 0;
+			orthoMatrix[2] = 0;
+			orthoMatrix[3] = 0;
+			
+			orthoMatrix[4] = 0;
+			orthoMatrix[5] = 2 / (top - bottom);
+			orthoMatrix[6] = 0;
+			orthoMatrix[7] = 0;
+
+			orthoMatrix[8] = 0;
+			orthoMatrix[9] = 0;
+			orthoMatrix[10] = -2 / (farVal - nearVal);
+			orthoMatrix[11] = 0;
+
+			orthoMatrix[12] = tx;
+			orthoMatrix[13] = ty;
+			orthoMatrix[14] = tz;
+			orthoMatrix[15] = 1;
+			matrixData[curMatrixMode] = multiplyMatrix(m, orthoMatrix);
+		},
+		Java_org_lwjgl_opengl_GL11_nglTranslatef(lib, x, y, z, funcPtr)
+		{
+debugger;
+			if(curList)
+				return;
+			var m = matrixData[curMatrixMode];
+			var t = new Float32Array(16);
+			translateMatrix(t, x, y, z);
+			matrixData[curMatrixMode] = multiplyMatrix(m, t);
+		},
+		Java_org_lwjgl_opengl_GL11_nglViewport(lib, x, y, width, height, funcPtr)
+		{
+			assert(curList == null);
+			mcCtx.viewport(x, y, width, height);
+		},
+		Java_org_lwjgl_opengl_GL11_nglDisable(lib, a, funcPtr)
+		{
+			assert(curList == null);
+			console.log("glDisable");
+		},
+		Java_org_lwjgl_opengl_GL11_nglEnable(lib, a, funcPtr)
+		{
+			assert(curList == null);
+			console.log("glEnable");
+		},
+		Java_org_lwjgl_opengl_GL11_nglGenTextures(lib, n, memPtr, funcPtr)
+		{
+			assert(curList == null);
+			var v = lib.getJNIDataView();
+			var buf = new Int32Array(v.buffer, Number(memPtr), n);
+			for(var i=0;i<n;i++)
+			{
+				var id = textureObjects.length;
+				buf[i] = id;
+				textureObjects[id] = mcCtx.createTexture();
+			}
+		},
+		Java_org_lwjgl_opengl_GL11_nglBindTexture(lib, target, id, funcPtr)
+		{
+			assert(curList == null);
+			assert(target == mcCtx.TEXTURE_2D);
+			mcCtx.bindTexture(target, textureObjects[id]);
+		},
+		Java_org_lwjgl_opengl_GL11_nglTexParameteri(lib, target, pname, param, funcPtr)
+		{
+			assert(curList == null);
+			mcCtx.texParameteri(target, pname, param);
+		},
+		Java_org_lwjgl_opengl_GL11_nglTexImage2D(lib, target, level, internalFormat, width, height, border, format, type, memPtr, funcPtr)
+		{
+			assert(curList == null);
+			assert(target == mcCtx.TEXTURE_2D);
+			var v = lib.getJNIDataView();
+			// Build an unbound array, WebGL will truncate as needed
+			var buf = new Uint8Array(v.buffer, Number(memPtr));
+			mcCtx.texImage2D(target, level, internalFormat, width, height, border, format, type, buf);
+		},
+		Java_org_lwjgl_opengl_GL11_nglTexCoordPointer(lib, size, type, stride, memPtr, funcPtr)
+		{
+			if(curList)
+				return;
+			texCoordData.size = size;
+			texCoordData.type = type;
+			texCoordData.stride = stride;
+			texCoordData.pointer = Number(memPtr);
+		},
+		Java_org_lwjgl_opengl_GL11_nglEnableClientState(lib, v, funcPtr)
+		{
+			if(curList)
+				return;
+			if(v == 0x8074/*GL_VERTEX_ARRAY*/)
+			{
+				vertexData.enabled = true;
+			}
+			else if(v == 0x8078/*GL_TEXTURE_COORD_ARRAY*/)
+			{
+				texCoordData.enabled = true;
+			}
+			else
+			{
+				console.log("glEnableClientState");
+			}
+		},
+		Java_org_lwjgl_opengl_GL11_nglColorPointer()
+		{
+			assert(curList == null);
+			console.log("glColorPointer");
+		},
+		Java_org_lwjgl_opengl_GL11_nglVertexPointer(lib, size, type, stride, memPtr, funcPtr)
+		{
+			if(curList)
+				return;
+			vertexData.size = size;
+			vertexData.type = type;
+			vertexData.stride = stride;
+			vertexData.pointer = Number(memPtr);
+		},
+		Java_org_lwjgl_opengl_GL11_nglDrawArrays(lib, mode, first, count, funcPtr)
+		{
+			if(curList)
+				return;
+			// TODO: Conditional
+debugger;
+			mcCtx.uniformMatrix4fv(mvLocation, false, matrixData[0]);
+			mcCtx.uniformMatrix4fv(projLocation, false, matrixData[1]);
+			// We can render each quad a separate GL_TRIANGLE_FAN
+			assert(mode == 7/*QUADS*/ && (count % 4) == 0);
+			assert(first == 0);
+			var v = lib.getJNIDataView();
+			// Upload vertex data
+			uploadData(v, vertexData, vertexBuffer, vertexPosition, count);
+			// Upload tex coord data
+			uploadData(v, texCoordData, texCoordBuffer, texCoord, count);
+			for(var i=0;i<count;i+=4)
+				mcCtx.drawArrays(mcCtx.TRIANGLE_FAN, i, count);
+		},
+		Java_org_lwjgl_opengl_GL11_nglDisableClientState(lib, v, funcPtr)
+		{
+			if(curList)
+				return;
+			if(v == 0x8074/*GL_VERTEX_ARRAY*/)
+			{
+				vertexData.enabled = false;
+			}
+			else if(v == 0x8078/*GL_TEXTURE_COORD_ARRAY*/)
+			{
+				texCoordData.enabled = false;
+			}
+			else
+			{
+				console.log("glDisableClientState");
+			}
+		},
+		Java_org_lwjgl_opengl_GL11_nglColor4f()
+		{
+			assert(curList == null);
+			console.log("glColor4f");
+		},
+		Java_org_lwjgl_opengl_GL11_nglAlphaFunc()
+		{
+			assert(curList == null);
+			console.log("glAlphaFunc");
+		},
+		Java_org_lwjgl_opengl_GL11_nglGenLists(lib, range, funcPtr)
+		{
+			assert(curList == null);
+			var ret = cmdLists.length;
+			for(var i=0;i<range;i++)
+				cmdLists.push({});
+			return ret;
+		},
+		Java_org_lwjgl_opengl_GL11_nglNewList(lib, list, mode, funcPtr)
+		{
+			assert(curList == null);
+			assert(mode == 0x1300/*GL_COMPILE*/);
+			curList = cmdLists[list];
+		},
+		Java_org_lwjgl_opengl_GL11_nglEndList(lib, funcPtr)
+		{
+			curList = null;
+		},
+		Java_org_lwjgl_opengl_GL11_nglColor3f()
+		{
+			if(curList)
+				return;
+			console.log("glColor3f");
+		},
+		Java_org_lwjgl_opengl_LinuxDisplay_nGetNativeCursorCapabilities()
+		{
+		},
+		Java_org_lwjgl_opengl_GL11_nglShadeModel()
+		{
+			assert(curList == null);
+			console.log("glShaderModel");
+		},
+		Java_org_lwjgl_opengl_GL11_nglClearDepth()
+		{
+			assert(curList == null);
+			console.log("glClearDepth");
+		},
+		Java_org_lwjgl_opengl_GL11_nglDepthFunc()
+		{
+			assert(curList == null);
+			console.log("glDepthFunc");
+		},
+		Java_org_lwjgl_opengl_GL11_nglCullFace()
+		{
+			assert(curList == null);
+			console.log("glCullFace");
+		},
+		Java_org_lwjgl_opengl_GL11_nglPushMatrix()
+		{
+			assert(curList == null);
+			console.log("glPushMatrix");
+		},
+		Java_org_lwjgl_opengl_GL11_nglPopMatrix()
+		{
+			assert(curList == null);
+			console.log("glPopMatrix");
+		},
+		Java_org_lwjgl_opengl_GL11_nglMultMatrixf()
+		{
+			assert(curList == null);
+			console.log("glMultMatrix");
+		},
+		Java_org_lwjgl_opengl_GL11_nglRotatef()
+		{
+			assert(curList == null);
+			console.log("glRotatef");
+		},
+		Java_org_lwjgl_opengl_GL11_nglDepthMask()
+		{
+			assert(curList == null);
+			console.log("glDepthMask");
+		},
+		Java_org_lwjgl_opengl_GL11_nglBlendFunc()
+		{
+			assert(curList == null);
+			console.log("glBlendFunc");
+		},
+		Java_org_lwjgl_opengl_GL11_nglColorMask()
+		{
+			assert(curList == null);
+			console.log("glColorMask");
+		},
+		Java_org_lwjgl_opengl_GL11_nglCopyTexSubImage2D(lib, target, level, xoffset, yoffset, x, y, width, height, funcPtr)
+		{
+			assert(curList == null);
+			mcCtx.copyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height);
+		},
+		Java_org_lwjgl_opengl_GL11_nglScalef()
+		{
+			assert(curList == null);
+			console.log("glScalef");
+		},
+		Java_org_lwjgl_opengl_GL11_nglCallLists()
+		{
+			assert(curList == null);
+			console.log("glCallLists");
+		},
+		Java_org_lwjgl_opengl_GL11_nglFlush()
+		{
+			assert(curList == null);
+			mcCtx.flush();
+			console.log("glFlush");
+			return new Promise(function(f, r)
+			{
+				requestAnimationFrame(f);
+			});
+		},
+		// These stubs make sure audio creation fails sooner rather than later
+		Java_org_lwjgl_openal_AL_nCreate()
+		{
+		},
+		Java_org_lwjgl_openal_AL10_initNativeStubs()
+		{
+		},
+		Java_org_lwjgl_openal_ALC10_initNativeStubs()
+		{
+		},
+		Java_org_lwjgl_openal_ALC10_nalcOpenDevice()
+		{
+		},
+		Java_org_lwjgl_openal_AL_resetNativeStubs()
+		{
+		},
+		Java_org_lwjgl_openal_AL_nDestroy()
+		{
+		},
+	};
+	var gl4es = null;
+	async function initialize()
+	{
+		try
+		{
+			var ret = await cheerpjInit({version:8,javaProperties:["java.library.path=/app/fad31287c147bbc4f8e083a2b1f59d0b007e4ce2", "minecraft.launcher.brand=minecraft-launcher", "minecraft.launcher.version=2.14.12", "minecraft.client.jar=/app1.0.jar"]/*,tailscaleAuthKey:"tskey-auth-kKvFtB6CNTRL-6PMx5d1cuRBAk2B2GpfdXBMHNMFjkxkZc"*/,natives:mcNatives});
+			cheerpjCreateDisplay(-1, -1, document.getElementById("display"));
+			var mainRet = await cheerpjRunMain("net.minecraft.launchwrapper.Launch", "/app/launchwrapper-1.5.jar:/app/jopt-simple-4.5.jar:/app/asm-all-4.1.jar:/app/jinput-2.0.5.jar:/app/jutils-1.0.0.jar:/app/lwjgl-2.9.0.jar:/app/lwjgl_util-2.9.0.jar:/app/1.0.jar", "--gameDir", "/app/");
+			console.log("Java process exit code:", mainRet, "elapsed:", performance.now());
+		}
+		catch(e)
+		{
+			console.log("Failure:", e);
+		}
+	}
+	initialize();
+    </script>
+  </body>
+</html>
