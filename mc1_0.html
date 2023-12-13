@@ -517,15 +517,21 @@
 			assert(curList == null);
 			curMatrixStack.pop();
 		},
-		Java_org_lwjgl_opengl_GL11_nglMultMatrixf()
+		Java_org_lwjgl_opengl_GL11_nglMultMatrixf(lib, memPtr, funcPtr)
 		{
 			assert(curList == null);
-			console.log("glMultMatrix");
+			var m = getCurMatrixTop();
+			var v = lib.getJNIDataView();
+			var buf = new Float32Array(v.buffer, Number(memPtr), 16);
+			var out = glMatrix.mat4.create();
+			setCurMatrixTop(glMatrix.mat4.multiply(out, m, buf));
 		},
-		Java_org_lwjgl_opengl_GL11_nglRotatef()
+		Java_org_lwjgl_opengl_GL11_nglRotatef(lib, angle, x, y, z, funcPtr)
 		{
 			assert(curList == null);
-			console.log("glRotatef");
+			var m = getCurMatrixTop();
+			var out = glMatrix.mat4.create();
+			setCurMatrixTop(glMatrix.mat4.rotate(out, m, angle * Math.PI / 180.0, glMatrix.vec3.fromValues(x, y, z)));
 		},
 		Java_org_lwjgl_opengl_GL11_nglDepthMask()
 		{
@@ -552,10 +558,12 @@
 debugger;
 			mcCtx.copyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height);
 		},
-		Java_org_lwjgl_opengl_GL11_nglScalef()
+		Java_org_lwjgl_opengl_GL11_nglScalef(lib, x, y, z, funcPtr)
 		{
 			assert(curList == null);
-			console.log("glScalef");
+			var m = getCurMatrixTop();
+			var out = glMatrix.mat4.create();
+			setCurMatrixTop(glMatrix.mat4.scale(out, m, glMatrix.vec3.fromValues(x, y, z)));
 		},
 		Java_org_lwjgl_opengl_GL11_nglCallLists()
 		{
