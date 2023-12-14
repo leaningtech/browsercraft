@@ -15,22 +15,30 @@
 	var mcCtx = mcCanvas.getContext("webgl2", {antialias: false});
 	var vertexShaderSrc = `
 		attribute vec4 aVertexPosition;
+		attribute vec4 aColor;
 		attribute vec2 aTexCoord;
 		uniform mat4 modelView;
 		uniform mat4 projection;
 		varying vec2 vTexCoord;
+		varying vec4 vColor;
 		void main() {
 			gl_Position = projection * modelView * aVertexPosition;
 			vTexCoord = aTexCoord;
+			vColor = aColor;
 		}
 	`;
+	// NOTE: Only the default GL_MODULE texEnv is supported here
 	var fragmentShaderSrc = `
 		precision mediump float;
+		uniform float uTextureMask;
 		uniform sampler2D uSampler;
 		varying vec2 vTexCoord;
+		varying vec4 vColor;
 		void main() {
 			vec4 texSample = texture2D(uSampler, vTexCoord);
-			gl_FragColor = vec4(texSample.r, texSample.g, texSample.b, 1.0);
+			vec4 colorValue = vColor * (1.0 - uTextureMask);
+			vec4 texValue = vColor * texSample * uTextureMask;
+			gl_FragColor = colorValue + texValue;
 		}
 	`;
 	var vertexShader = mcCtx.createShader(mcCtx.VERTEX_SHADER);
@@ -45,13 +53,24 @@
 	mcCtx.linkProgram(program);
 	mcCtx.useProgram(program);
 	var vertexBuffer = mcCtx.createBuffer();
+	var colorBuffer = mcCtx.createBuffer();
 	var texCoordBuffer = mcCtx.createBuffer();
 	var vertexPosition = mcCtx.getAttribLocation(program, "aVertexPosition");
+	var colorLocation = mcCtx.getAttribLocation(program, "aColor");
 	var texCoord = mcCtx.getAttribLocation(program, "aTexCoord");
 	var mvLocation = mcCtx.getUniformLocation(program, "modelView");
 	var projLocation = mcCtx.getUniformLocation(program, "projection");
 	var samplerLocation = mcCtx.getUniformLocation(program, "uSampler");
+	var texMaskLocation = mcCtx.getUniformLocation(program, "uTextureMask");
 	var vertexData =
+	{
+		enabled: false,
+		size: 0,
+		type: 0,
+		stride: 0,
+		pointer: 0
+	};
+	var colorData =
 	{
 		enabled: false,
 		size: 0,
@@ -84,12 +103,11 @@
 	{
 		if(data.enabled)
 		{
-			assert(data.type == mcCtx.FLOAT);
 			assert(data.stride);
-			var buf = new Float32Array(v.buffer, data.pointer, (data.stride >> 2) * count);
+			var buf = new Uint8Array(v.buffer, data.pointer, data.stride * count);
 			mcCtx.bindBuffer(mcCtx.ARRAY_BUFFER, buffer);
 			mcCtx.bufferData(mcCtx.ARRAY_BUFFER, buf, mcCtx.STATIC_DRAW);
-			mcCtx.vertexAttribPointer(attributeLocation, data.size, data.type, false, data.stride, 0);
+			mcCtx.vertexAttribPointer(attributeLocation, data.size, data.type, data.type != mcCtx.FLOAT, data.stride, 0);
 			mcCtx.enableVertexAttribArray(attributeLocation);
 		}
 		else
@@ -338,6 +356,8 @@
 			assert(curList == null);
 			if(a == mcCtx.BLEND)
 				mcCtx.disable(a);
+			else if(a == 0xde1/*GL_TEXTURE_2D*/)
+				mcCtx.uniform1f(texMaskLocation, 0);
 			else
 				console.log("glDisable " + a.toString(16));
 		},
@@ -346,6 +366,8 @@
 			assert(curList == null);
 			if(a == mcCtx.BLEND)
 				mcCtx.enable(a);
+			else if(a == 0xde1/*GL_TEXTURE_2D*/)
+				mcCtx.uniform1f(texMaskLocation, 1);
 			else
 				console.log("glEnable " + a.toString(16));
 		},
@@ -398,6 +420,10 @@
 			{
 				vertexData.enabled = true;
 			}
+			else if(v == 0x8076/*GL_COLOR_ARRAY*/)
+			{
+				colorData.enabled = true;
+			}
 			else if(v == 0x8078/*GL_TEXTURE_COORD_ARRAY*/)
 			{
 				texCoordData.enabled = true;
@@ -407,10 +433,13 @@
 				console.log("glEnableClientState");
 			}
 		},
-		Java_org_lwjgl_opengl_GL11_nglColorPointer()
+		Java_org_lwjgl_opengl_GL11_nglColorPointer(lib, size, type, stride, memPtr, funcPtr)
 		{
 			assert(curList == null);
-			console.log("glColorPointer");
+			colorData.size = size;
+			colorData.type = type;
+			colorData.stride = stride;
+			colorData.pointer = Number(memPtr);
 		},
 		Java_org_lwjgl_opengl_GL11_nglVertexPointer(lib, size, type, stride, memPtr, funcPtr)
 		{
@@ -434,6 +463,8 @@
 			var v = lib.getJNIDataView();
 			// Upload vertex data
 			uploadData(v, vertexData, vertexBuffer, vertexPosition, count);
+			// Upload color data
+			uploadData(v, colorData, colorBuffer, colorLocation, count);
 			// Upload tex coord data
 			uploadData(v, texCoordData, texCoordBuffer, texCoord, count);
 			for(var i=0;i<count;i+=4)
@@ -447,6 +478,10 @@
 			{
 				vertexData.enabled = false;
 			}
+			else if(v == 0x8076/*GL_COLOR_ARRAY*/)
+			{
+				colorData.enabled = false;
+			}
 			else if(v == 0x8078/*GL_TEXTURE_COORD_ARRAY*/)
 			{
 				texCoordData.enabled = false;
@@ -456,10 +491,10 @@
 				console.log("glDisableClientState");
 			}
 		},
-		Java_org_lwjgl_opengl_GL11_nglColor4f()
+		Java_org_lwjgl_opengl_GL11_nglColor4f(lib, r, g, b, a, funcPtr)
 		{
 			assert(curList == null);
-			console.log("glColor4f");
+			mcCtx.vertexAttrib4f(colorLocation, r, g, b, a);
 		},
 		Java_org_lwjgl_opengl_GL11_nglAlphaFunc()
 		{
