@@ -629,6 +629,15 @@ debugger;
 				requestAnimationFrame(f);
 			});
 		},
+		Java_org_lwjgl_opengl_GL11_nglTexSubImage2D(lib, target, level, xoffset, yoffset, width, height, format, type, memPtr, funcPtr)
+		{
+			assert(curList == null);
+			assert(target == mcCtx.TEXTURE_2D);
+			var v = lib.getJNIDataView();
+			// Build an unbound array, WebGL will truncate as needed
+			var buf = new Uint8Array(v.buffer, Number(memPtr));
+			mcCtx.texSubImage2D(target, level, xoffset, yoffset, width, height, format, type, buf);
+		},
 		// These stubs make sure audio creation fails sooner rather than later
 		Java_org_lwjgl_openal_AL_nCreate()
 		{
