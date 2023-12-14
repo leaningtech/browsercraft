@@ -132,7 +132,8 @@
 	mcCtx.bindFramebuffer(mcCtx.READ_FRAMEBUFFER, mainFb);
 	mcCtx.bindFramebuffer(mcCtx.DRAW_FRAMEBUFFER, mainFb);
 	mcCtx.framebufferTexture2D(mcCtx.FRAMEBUFFER, mcCtx.COLOR_ATTACHMENT0, mcCtx.TEXTURE_2D, fbTexture, 0);
-	var eventQueue = [];
+	// Synthetize a focus event, it's needed for LWJGL logic
+	var eventQueue = [{type:"focus"}];
 	mcCanvas.addEventListener("mousemove", function(e)
 	{
 		// TODO: Merge events
@@ -672,6 +673,9 @@
 			var e = eventQueue.shift();
 			switch(e.type)
 			{
+				case "focus":
+					v.setInt32(0, /*FocusIn*/9, true);
+					break;
 				case "mousedown":
 					v.setInt32(0, /*ButtonPress*/4, true);
 					v.setInt32(4, e.x, true);
@@ -735,6 +739,9 @@
 			var bufferAddr = Number(await buffer.address());
 			var v = lib.getJNIDataView();
 			return v.getInt32(8, true);
+		},
+		Java_org_lwjgl_opengl_LinuxEvent_nGetFocusDetail()
+		{
 		},
 	};
 	async function initialize()
