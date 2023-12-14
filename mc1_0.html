@@ -138,7 +138,15 @@
 		// TODO: Merge events
 		if(eventQueue.length)
 			return;
-		eventQueue.push({type:"move", x:e.clientX, y:e.clientY});
+		eventQueue.push({type:e.type, x:e.clientX, y:e.clientY});
+	});
+	mcCanvas.addEventListener("mousedown", function(e)
+	{
+		eventQueue.push({type:e.type, x:e.clientX, y:e.clientY});
+	});
+	mcCanvas.addEventListener("mouseup", function(e)
+	{
+		eventQueue.push({type:e.type, x:e.clientX, y:e.clientY});
 	});
 	var mcNatives =
 	{
@@ -664,7 +672,17 @@
 			var e = eventQueue.shift();
 			switch(e.type)
 			{
-				case "move":
+				case "mousedown":
+					v.setInt32(0, /*ButtonPress*/4, true);
+					v.setInt32(4, e.x, true);
+					v.setInt32(8, e.y, true);
+					break;
+				case "mouseup":
+					v.setInt32(0, /*ButtonRelease*/5, true);
+					v.setInt32(4, e.x, true);
+					v.setInt32(8, e.y, true);
+					break;
+				case "mousemove":
 					v.setInt32(0, /*MotionNotify*/6, true);
 					v.setInt32(4, e.x, true);
 					v.setInt32(8, e.y, true);
