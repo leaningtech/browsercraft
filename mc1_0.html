@@ -495,8 +495,6 @@
 			// TODO: Conditional
 			mcCtx.uniformMatrix4fv(mvLocation, false, modelViewMatrixStack[modelViewMatrixStack.length - 1]);
 			mcCtx.uniformMatrix4fv(projLocation, false, projMatrixStack[projMatrixStack.length - 1]);
-			// We can render each quad a separate GL_TRIANGLE_FAN
-			assert(mode == 7/*QUADS*/ && (count % 4) == 0);
 			assert(first == 0);
 			var v = lib.getJNIDataView();
 			// Upload vertex data
@@ -505,8 +503,20 @@
 			uploadData(v, colorData, colorBuffer, colorLocation, count);
 			// Upload tex coord data
 			uploadData(v, texCoordData, texCoordBuffer, texCoord, count);
-			for(var i=0;i<count;i+=4)
-				mcCtx.drawArrays(mcCtx.TRIANGLE_FAN, i, 4);
+			// We can render each quad a separate GL_TRIANGLE_FAN
+			if(mode == 7/*QUADS*/ && (count % 4) == 0)
+			{
+				for(var i=0;i<count;i+=4)
+					mcCtx.drawArrays(mcCtx.TRIANGLE_FAN, i, 4);
+			}
+			else if(mode == mcCtx.LINES || mode == mcCtx.LINE_STRIP || mode == mcCtx.TRIANGLE_FAN)
+			{
+				mcCtx.drawArrays(mode, first, count);
+			}
+			else
+			{
+				debugger;
+			}
 		},
 		Java_org_lwjgl_opengl_GL11_nglDisableClientState(lib, v, funcPtr)
 		{
