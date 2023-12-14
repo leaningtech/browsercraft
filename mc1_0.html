@@ -641,6 +641,76 @@
 			var buf = new Uint8Array(v.buffer, Number(memPtr));
 			mcCtx.texSubImage2D(target, level, xoffset, yoffset, width, height, format, type, buf);
 		},
+		Java_org_lwjgl_opengl_GL11_nglGetFloatv()
+		{
+			assert(curList == null);
+			console.log("glGetFloat");
+		},
+		Java_org_lwjgl_opengl_GL11_nglFogfv()
+		{
+			assert(curList == null);
+			console.log("glFog");
+		},
+		Java_org_lwjgl_opengl_GL11_nglNormal3f()
+		{
+			assert(curList == null);
+			console.log("glNormal3f");
+		},
+		Java_org_lwjgl_opengl_GL11_nglFogi()
+		{
+			assert(curList == null);
+			console.log("glFogi");
+		},
+		Java_org_lwjgl_opengl_GL11_nglFogf()
+		{
+			assert(curList == null);
+			console.log("glFogf");
+		},
+		Java_org_lwjgl_opengl_GL11_nglColorMaterial()
+		{
+			assert(curList == null);
+			console.log("glColorMaterial");
+		},
+		Java_org_lwjgl_opengl_GL11_nglCallList()
+		{
+			assert(curList == null);
+			console.log("glCallList");
+		},
+		Java_org_lwjgl_opengl_GL13_nglActiveTexture()
+		{
+			assert(curList == null);
+			console.log("glActiveTexture");
+		},
+		Java_org_lwjgl_opengl_GL11_nglLightfv()
+		{
+			assert(curList == null);
+			console.log("glLightfv");
+		},
+		Java_org_lwjgl_opengl_GL11_nglLightModelfv()
+		{
+			assert(curList == null);
+			console.log("glLightModelfv");
+		},
+		Java_org_lwjgl_opengl_GL11_nglNormalPointer()
+		{
+			assert(curList == null);
+			console.log("glNormalPointer");
+		},
+		Java_org_lwjgl_opengl_GL13_nglMultiTexCoord2f()
+		{
+			assert(curList == null);
+			console.log("glMultiTexCoord2f");
+		},
+		Java_org_lwjgl_opengl_GL13_nglClientActiveTexture()
+		{
+			assert(curList == null);
+			console.log("glClientActiveTexture");
+		},
+		Java_org_lwjgl_opengl_GL11_nglLineWidth()
+		{
+			assert(curList == null);
+			console.log("glLineWidth");
+		},
 		// These stubs make sure audio creation fails sooner rather than later
 		Java_org_lwjgl_openal_AL_nCreate()
 		{
