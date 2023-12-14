@@ -294,7 +294,19 @@
 		Java_org_lwjgl_opengl_GL11_nglGetIntegerv(lib, id, memPtr, funcPtr)
 		{
 			assert(curList == null);
-			console.log("glGetInteger", id);
+			var v = lib.getJNIDataView();
+			var buf = new Int32Array(v.buffer, Number(memPtr), 4);
+			if(id == /*GL_VIEWPORT*/0xba2)
+			{
+				buf[0] = 0;
+				buf[1] = 0;
+				buf[2] = 1024;
+				buf[3] = 768;
+			}
+			else
+			{
+				console.log("glGetInteger", id);
+			}
 		},
 		Java_org_lwjgl_opengl_GL11_nglGetError()
 		{
@@ -644,10 +656,27 @@
 			var buf = new Uint8Array(v.buffer, Number(memPtr));
 			mcCtx.texSubImage2D(target, level, xoffset, yoffset, width, height, format, type, buf);
 		},
-		Java_org_lwjgl_opengl_GL11_nglGetFloatv()
+		Java_org_lwjgl_opengl_GL11_nglGetFloatv(lib, a, memPtr, funcPtr)
 		{
 			assert(curList == null);
-			console.log("glGetFloat");
+			var v = lib.getJNIDataView();
+			var buf = new Float32Array(v.buffer, Number(memPtr), 16);
+			if(a == /*GL_MODELVIEW_MATRIX*/0xba6)
+			{
+				var m = modelViewMatrixStack[modelViewMatrixStack.length - 1];
+				for(var i=0;i<16;i++)
+					buf[i] = m[i];
+			}
+			else if(a == /*GL_PROJECTION_MATRIX*/0xba7)
+			{
+				var m = projMatrixStack[projMatrixStack.length - 1];
+				for(var i=0;i<16;i++)
+					buf[i] = m[i];
+			}
+			else
+			{
+				console.log("glGetFloat "+a);
+			}
 		},
 		Java_org_lwjgl_opengl_GL11_nglFogfv()
 		{
