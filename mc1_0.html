@@ -243,6 +243,8 @@
 		},
 		Java_org_lwjgl_opengl_LinuxMouse_nGetButtonCount()
 		{
+			// TODO: Expand for right click
+			return 1;
 		},
 		Java_org_lwjgl_opengl_LinuxMouse_nQueryPointer()
 		{
@@ -742,6 +744,18 @@
 		},
 		Java_org_lwjgl_opengl_LinuxEvent_nGetFocusDetail()
 		{
+		},
+		async Java_org_lwjgl_opengl_LinuxEvent_nGetButtonType(lib, buffer)
+		{
+			// Same as type, apparently
+			var bufferAddr = Number(await buffer.address());
+			var v = lib.getJNIDataView();
+			return v.getInt32(0, true);
+		},
+		Java_org_lwjgl_opengl_LinuxEvent_nGetButtonButton()
+		{
+			// X11 button 1 (left)
+			return 1;
 		},
 	};
 	async function initialize()
