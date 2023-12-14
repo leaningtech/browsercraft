@@ -92,6 +92,7 @@
 	// NOTE: These initializes to identity
 	var projMatrixStack = [glMatrix.mat4.create()];
 	var modelViewMatrixStack = [glMatrix.mat4.create()];
+	var textureMatrixStack = [glMatrix.mat4.create()];
 	var curMatrixStack = modelViewMatrixStack;
 	function getCurMatrixTop()
 	{
@@ -342,6 +343,8 @@
 				curMatrixStack = modelViewMatrixStack;
 			else if(matrixMode == 0x1701/*GL_PROJECTION*/)
 				curMatrixStack = projMatrixStack;
+			else if(matrixMode == 0x1702/*GL_TEXTURE*/)
+				curMatrixStack = textureMatrixStack;
 			else
 				debugger;
 		},
