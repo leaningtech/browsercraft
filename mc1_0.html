@@ -350,7 +350,8 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglMatrixMode(lib, matrixMode, funcPtr)
 		{
-			assert(curList == null);
+			if(curList)
+				return;
 			if(matrixMode == 0x1700/*GL_MODELVIEW*/)
 				curMatrixStack = modelViewMatrixStack;
 			else if(matrixMode == 0x1701/*GL_PROJECTION*/)
@@ -471,7 +472,8 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglColorPointer(lib, size, type, stride, memPtr, funcPtr)
 		{
-			assert(curList == null);
+			if(curList)
+				return;
 			colorData.size = size;
 			colorData.type = type;
 			colorData.stride = stride;
@@ -586,12 +588,14 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglPushMatrix(lib, funcPtr)
 		{
-			assert(curList == null);
+			if(curList)
+				return;
 			curMatrixStack.push(glMatrix.mat4.clone(curMatrixStack[curMatrixStack.length - 1]));
 		},
 		Java_org_lwjgl_opengl_GL11_nglPopMatrix(lib, funcPtr)
 		{
-			assert(curList == null);
+			if(curList)
+				return;
 			curMatrixStack.pop();
 		},
 		Java_org_lwjgl_opengl_GL11_nglMultMatrixf(lib, memPtr, funcPtr)
@@ -632,7 +636,8 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglScalef(lib, x, y, z, funcPtr)
 		{
-			assert(curList == null);
+			if(curList)
+				return;
 			var m = getCurMatrixTop();
 			var out = glMatrix.mat4.create();
 			setCurMatrixTop(glMatrix.mat4.scale(out, m, glMatrix.vec3.fromValues(x, y, z)));
@@ -735,7 +740,8 @@
 		},
 		Java_org_lwjgl_opengl_GL13_nglClientActiveTexture()
 		{
-			assert(curList == null);
+			if(curList)
+				return;
 			console.log("glClientActiveTexture");
 		},
 		Java_org_lwjgl_opengl_GL11_nglLineWidth()
