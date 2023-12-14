@@ -86,7 +86,9 @@
 		stride: 0,
 		pointer: 0
 	};
-	var curMatrixMode = 0;
+	var frameCount = 0;
+	// Set to a non-zero value to stop after a certain number of frames
+	var frameLimit = 0;
 	// NOTE: These initializes to identity
 	var projMatrixStack = [glMatrix.mat4.create()];
 	var modelViewMatrixStack = [glMatrix.mat4.create()];
@@ -305,6 +307,12 @@
 			mcCtx.bindFramebuffer(mcCtx.DRAW_FRAMEBUFFER, null);
 			mcCtx.blitFramebuffer(0, 0, 1024, 768, 0, 0, 1024, 768, mcCtx.COLOR_BUFFER_BIT, mcCtx.NEAREST);
 			mcCtx.bindFramebuffer(mcCtx.DRAW_FRAMEBUFFER, mainFb);
+			frameCount++;
+			if(frameCount == 0)
+			{
+				console.warn("Stopping");
+				return new Promise(function(){});
+			}
 			return new Promise(function(f, r)
 			{
 				requestAnimationFrame(f);
