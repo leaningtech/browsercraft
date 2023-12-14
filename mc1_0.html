@@ -132,6 +132,14 @@
 	mcCtx.bindFramebuffer(mcCtx.READ_FRAMEBUFFER, mainFb);
 	mcCtx.bindFramebuffer(mcCtx.DRAW_FRAMEBUFFER, mainFb);
 	mcCtx.framebufferTexture2D(mcCtx.FRAMEBUFFER, mcCtx.COLOR_ATTACHMENT0, mcCtx.TEXTURE_2D, fbTexture, 0);
+	var eventQueue = [];
+	mcCanvas.addEventListener("mousemove", function(e)
+	{
+		// TODO: Merge events
+		if(eventQueue.length)
+			return;
+		eventQueue.push({type:"move", x:e.clientX, y:e.clientY});
+	});
 	var mcNatives =
 	{
 		Java_org_lwjgl_DefaultSysImplementation_getPointerSize()
@@ -143,9 +151,6 @@
 			return 19;
 		},
 		Java_org_lwjgl_DefaultSysImplementation_setDebug()
-		{
-		},
-		Java_org_lwjgl_opengl_LinuxEvent_createEventBuffer()
 		{
 		},
 		Java_org_lwjgl_opengl_LinuxDisplay_nLockAWT()
@@ -317,7 +322,7 @@
 		},
 		Java_org_lwjgl_opengl_LinuxEvent_getPending()
 		{
-			return 0;
+			return eventQueue.length;
 		},
 		Java_org_lwjgl_opengl_GL11_nglMatrixMode(lib, matrixMode, funcPtr)
 		{
@@ -643,6 +648,75 @@
 		},
 		Java_org_lwjgl_openal_AL_nDestroy()
 		{
+		},
+		// Basic input support
+		async Java_org_lwjgl_opengl_LinuxEvent_createEventBuffer(lib)
+		{
+			// This is intended to represent a X11 event, but we are free to use any layout
+			var ByteBuffer = await lib.java.nio.ByteBuffer;
+			return await ByteBuffer.allocateDirect(12);
+		},
+		async Java_org_lwjgl_opengl_LinuxEvent_nNextEvent(lib, windowId, buffer)
+		{
+			// Resolve the address and directly access the JNI memory
+			var bufferAddr = Number(await buffer.address());
+			var v = lib.getJNIDataView();
+			var e = eventQueue.shift();
+			switch(e.type)
+			{
+				case "move":
+					v.setInt32(0, /*MotionNotify*/6, true);
+					v.setInt32(4, e.x, true);
+					v.setInt32(8, e.y, true);
+					break;
+				default:
+					debugger;
+			}
+		},
+		Java_org_lwjgl_opengl_LinuxEvent_nGetWindow()
+		{
+			// Only a single window is emulated
+			return 0;
+		},
+		async Java_org_lwjgl_opengl_LinuxEvent_nGetType(lib, buffer)
+		{
+			var bufferAddr = Number(await buffer.address());
+			var v = lib.getJNIDataView();
+			return v.getInt32(0, true);
+		},
+		Java_org_lwjgl_opengl_LinuxEvent_nFilterEvent()
+		{
+		},
+		Java_org_lwjgl_opengl_LinuxEvent_nGetButtonTime()
+		{
+			// TODO: Event timestamps
+		},
+		Java_org_lwjgl_opengl_LinuxEvent_nGetButtonRoot()
+		{
+		},
+		async Java_org_lwjgl_opengl_LinuxEvent_nGetButtonXRoot(lib, buffer)
+		{
+			var bufferAddr = Number(await buffer.address());
+			var v = lib.getJNIDataView();
+			return v.getInt32(4, true);
+		},
+		async Java_org_lwjgl_opengl_LinuxEvent_nGetButtonYRoot(lib, buffer)
+		{
+			var bufferAddr = Number(await buffer.address());
+			var v = lib.getJNIDataView();
+			return v.getInt32(8, true);
+		},
+		async Java_org_lwjgl_opengl_LinuxEvent_nGetButtonX(lib, buffer)
+		{
+			var bufferAddr = Number(await buffer.address());
+			var v = lib.getJNIDataView();
+			return v.getInt32(4, true);
+		},
+		async Java_org_lwjgl_opengl_LinuxEvent_nGetButtonY(lib, buffer)
+		{
+			var bufferAddr = Number(await buffer.address());
+			var v = lib.getJNIDataView();
+			return v.getInt32(8, true);
 		},
 	};
 	async function initialize()
