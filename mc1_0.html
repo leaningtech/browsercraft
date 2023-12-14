@@ -587,15 +587,15 @@
 			assert(curList == null);
 			console.log("glDepthMask");
 		},
-		Java_org_lwjgl_opengl_GL11_nglBlendFunc()
+		Java_org_lwjgl_opengl_GL11_nglBlendFunc(lib, sfactor, dfactor)
 		{
 			assert(curList == null);
-			console.log("glBlendFunc");
+			mcCtx.blendFunc(sfactor, dfactor);
 		},
-		Java_org_lwjgl_opengl_GL11_nglColorMask()
+		Java_org_lwjgl_opengl_GL11_nglColorMask(lib, r, g, b, a, funcPtr)
 		{
 			assert(curList == null);
-			console.log("glColorMask");
+			mcCtx.colorMask(r, g, b, a);
 		},
 		Java_org_lwjgl_opengl_GL11_nglCopyTexSubImage2D(lib, target, level, xoffset, yoffset, x, y, width, height, funcPtr)
 		{
