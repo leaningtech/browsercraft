@@ -600,11 +600,6 @@
 		Java_org_lwjgl_opengl_GL11_nglCopyTexSubImage2D(lib, target, level, xoffset, yoffset, x, y, width, height, funcPtr)
 		{
 			assert(curList == null);
-			// TODO: Remove this debug blitting
-			mcCtx.bindFramebuffer(mcCtx.DRAW_FRAMEBUFFER, null);
-			mcCtx.blitFramebuffer(0, 0, 1024, 768, 0, 0, 1024, 768, mcCtx.COLOR_BUFFER_BIT, mcCtx.NEAREST);
-			mcCtx.bindFramebuffer(mcCtx.DRAW_FRAMEBUFFER, mainFb);
-debugger;
 			mcCtx.copyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height);
 		},
 		Java_org_lwjgl_opengl_GL11_nglScalef(lib, x, y, z, funcPtr)
@@ -623,11 +618,6 @@ debugger;
 		{
 			assert(curList == null);
 			mcCtx.flush();
-			console.log("glFlush");
-			return new Promise(function(f, r)
-			{
-				requestAnimationFrame(f);
-			});
 		},
 		Java_org_lwjgl_opengl_GL11_nglTexSubImage2D(lib, target, level, xoffset, yoffset, width, height, format, type, memPtr, funcPtr)
 		{
