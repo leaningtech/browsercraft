@@ -336,12 +336,18 @@
 		Java_org_lwjgl_opengl_GL11_nglDisable(lib, a, funcPtr)
 		{
 			assert(curList == null);
-			console.log("glDisable");
+			if(a == mcCtx.BLEND)
+				mcCtx.disable(a);
+			else
+				console.log("glDisable " + a.toString(16));
 		},
 		Java_org_lwjgl_opengl_GL11_nglEnable(lib, a, funcPtr)
 		{
 			assert(curList == null);
-			console.log("glEnable");
+			if(a == mcCtx.BLEND)
+				mcCtx.enable(a);
+			else
+				console.log("glEnable " + a.toString(16));
 		},
 		Java_org_lwjgl_opengl_GL11_nglGenTextures(lib, n, memPtr, funcPtr)
 		{
