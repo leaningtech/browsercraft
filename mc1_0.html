@@ -12,7 +12,7 @@
    </div>
    <script>
 	var mcCanvas = document.getElementById("mc");
-	var mcCtx = mcCanvas.getContext("webgl2", {antialias: false});
+	var mcCtx = mcCanvas.getContext("webgl2", {antialias: false, alpha: false});
 	var vertexShaderSrc = `
 		attribute vec4 aVertexPosition;
 		attribute vec4 aColor;
