@@ -277,9 +277,6 @@
 		Java_org_lwjgl_opengl_GL11_nglGetIntegerv(lib, id, memPtr, funcPtr)
 		{
 			assert(curList == null);
-			var d = lib.getJNIDataView();
-			var ret = gl4es.getInteger(id);
-			//d.setInt32(Number(memPtr), ret, true);
 			console.log("glGetInteger", id);
 		},
 		Java_org_lwjgl_opengl_GL11_nglGetError()
@@ -648,7 +645,6 @@
 		{
 		},
 	};
-	var gl4es = null;
 	async function initialize()
 	{
 		try
