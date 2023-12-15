@@ -210,6 +210,11 @@
 	mcCtx.bindFramebuffer(mcCtx.READ_FRAMEBUFFER, mainFb);
 	mcCtx.bindFramebuffer(mcCtx.DRAW_FRAMEBUFFER, mainFb);
 	mcCtx.framebufferTexture2D(mcCtx.FRAMEBUFFER, mcCtx.COLOR_ATTACHMENT0, mcCtx.TEXTURE_2D, fbTexture, 0);
+	// Add a depth render buffer
+	var depthRb = mcCtx.createRenderbuffer();
+	mcCtx.bindRenderbuffer(mcCtx.RENDERBUFFER, depthRb);
+	mcCtx.renderbufferStorage(mcCtx.RENDERBUFFER, mcCtx.DEPTH_COMPONENT16, 1024, 768);
+	mcCtx.framebufferRenderbuffer(mcCtx.FRAMEBUFFER, mcCtx.DEPTH_ATTACHMENT, mcCtx.RENDERBUFFER, depthRb);
 	// Synthetize a focus event, it's needed for LWJGL logic
 	var eventQueue = [{type:"focus"}];
 	mcCanvas.addEventListener("mousemove", function(e)
@@ -468,7 +473,7 @@
 		Java_org_lwjgl_opengl_GL11_nglDisable(lib, a, funcPtr)
 		{
 			checkNoList(curList);
-			if(a == mcCtx.BLEND || a == mcCtx.CULL_FACE)
+			if(a == mcCtx.BLEND || a == mcCtx.CULL_FACE || a == mcCtx.DEPTH_TEST)
 				mcCtx.disable(a);
 			else if(a == 0xde1/*GL_TEXTURE_2D*/)
 				mcCtx.uniform1f(texMaskLocation, 0);
@@ -478,7 +483,7 @@
 		Java_org_lwjgl_opengl_GL11_nglEnable(lib, a, funcPtr)
 		{
 			checkNoList(curList);
-			if(a == mcCtx.BLEND || a == mcCtx.CULL_FACE)
+			if(a == mcCtx.BLEND || a == mcCtx.CULL_FACE || a == mcCtx.DEPTH_TEST)
 				mcCtx.enable(a);
 			else if(a == 0xde1/*GL_TEXTURE_2D*/)
 				mcCtx.uniform1f(texMaskLocation, 1);
@@ -635,15 +640,15 @@
 			checkNoList(curList);
 			console.log("glShaderModel");
 		},
-		Java_org_lwjgl_opengl_GL11_nglClearDepth()
+		Java_org_lwjgl_opengl_GL11_nglClearDepth(lib, a, funcPtr)
 		{
 			checkNoList(curList);
-			console.log("glClearDepth");
+			mcCtx.clearDepth(a);
 		},
-		Java_org_lwjgl_opengl_GL11_nglDepthFunc()
+		Java_org_lwjgl_opengl_GL11_nglDepthFunc(lib, a, funcPtr)
 		{
 			checkNoList(curList);
-			console.log("glDepthFunc");
+			mcCtx.depthFunc(a);
 		},
 		Java_org_lwjgl_opengl_GL11_nglCullFace(lib, mode, funcPtr)
 		{
@@ -678,10 +683,10 @@
 			var out = glMatrix.mat4.create();
 			setCurMatrixTop(glMatrix.mat4.rotate(out, m, angle * Math.PI / 180.0, glMatrix.vec3.fromValues(x, y, z)));
 		},
-		Java_org_lwjgl_opengl_GL11_nglDepthMask()
+		Java_org_lwjgl_opengl_GL11_nglDepthMask(lib, a, funcPtr)
 		{
 			checkNoList(curList);
-			console.log("glDepthMask");
+			mcCtx.depthMask(a);
 		},
 		Java_org_lwjgl_opengl_GL11_nglBlendFunc(lib, sfactor, dfactor)
 		{
