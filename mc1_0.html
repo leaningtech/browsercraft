@@ -68,7 +68,8 @@
 		size: 0,
 		type: 0,
 		stride: 0,
-		pointer: 0
+		pointer: 0,
+		buf: null
 	};
 	var colorData =
 	{
@@ -76,7 +77,8 @@
 		size: 0,
 		type: 0,
 		stride: 0,
-		pointer: 0
+		pointer: 0,
+		buf: null
 	};
 	var texCoordData =
 	{
@@ -84,7 +86,8 @@
 		size: 0,
 		type: 0,
 		stride: 0,
-		pointer: 0
+		pointer: 0,
+		buf: null
 	};
 	var frameCount = 0;
 	// Set to a non-zero value to stop after a certain number of frames
@@ -107,7 +110,12 @@
 		if(data.enabled)
 		{
 			assert(data.stride);
-			var buf = new Uint8Array(v.buffer, data.pointer, data.stride * count);
+			var buf = data.buf;
+			if(buf == null)
+			{
+				assert(v && data.pointer);
+				buf = new Uint8Array(v.buffer, data.pointer, data.stride * count);
+			}
 			mcCtx.bindBuffer(mcCtx.ARRAY_BUFFER, buffer);
 			mcCtx.bufferData(mcCtx.ARRAY_BUFFER, buf, mcCtx.STATIC_DRAW);
 			mcCtx.vertexAttribPointer(attributeLocation, data.size, data.type, data.type != mcCtx.FLOAT, data.stride, 0);
@@ -117,6 +125,18 @@
 		{
 			mcCtx.disableVertexAttribArray(attributeLocation);
 		}
+	}
+	function captureData(v, data, count)
+	{
+		var ret = { enabled: data.enabled, size: data.size, type: data.type, stride: data.stride, pointer: 0, buf: null };
+		if(data.enabled)
+		{
+			assert(data.stride);
+			var buf = new Uint8Array(v.buffer, data.pointer, data.stride * count);
+			// Capture the current data
+			ret.buf = new Uint8Array(buf);
+		}
+		return ret;
 	}
 	function checkNoList(list)
 	{
@@ -138,6 +158,42 @@
 			var c = l[i];
 			c.f.apply(null, c.a);
 		}
+	}
+	function drawArraysImpl(mode, first, count)
+	{
+		// TODO: Conditional
+		mcCtx.uniformMatrix4fv(mvLocation, false, modelViewMatrixStack[modelViewMatrixStack.length - 1]);
+		mcCtx.uniformMatrix4fv(projLocation, false, projMatrixStack[projMatrixStack.length - 1]);
+		assert(first == 0);
+		// We can render each quad a separate GL_TRIANGLE_FAN
+		if(mode == 7/*QUADS*/ && (count % 4) == 0)
+		{
+			for(var i=0;i<count;i+=4)
+				mcCtx.drawArrays(mcCtx.TRIANGLE_FAN, i, 4);
+		}
+		else if(mode == mcCtx.LINES || mode == mcCtx.LINE_STRIP || mode == mcCtx.TRIANGLE_FAN)
+		{
+			mcCtx.drawArrays(mode, first, count);
+		}
+		else
+		{
+			debugger;
+		}
+	}
+	function pushDrawArraysInList(list, v, mode, first, count)
+	{
+		var args = [mode, first, count, captureData(v, vertexData, count), captureData(v, colorData, count), captureData(v, texCoordData, count)];
+		list.push({f: drawArraysInList, a: args});
+	}
+	function drawArraysInList(mode, first, count, capturedVertexData, capturedColorData, capturedTexCoordData)
+	{
+		// Upload vertex data
+		uploadData(null, capturedVertexData, vertexBuffer, vertexPosition, count);
+		// Upload color data
+		uploadData(null, capturedColorData, colorBuffer, colorLocation, count);
+		// Upload tex coord data
+		uploadData(null, capturedTexCoordData, texCoordBuffer, texCoord, count);
+		drawArraysImpl(mode, first, count);
 	}
 	// Fix the sampler to texture unit 0
 	mcCtx.uniform1i(samplerLocation, 0);
@@ -503,33 +559,19 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglDrawArrays(lib, mode, first, count, funcPtr)
 		{
-			if(curList)
-				return pushInList(curList, arguments);
-			// TODO: Conditional
-			mcCtx.uniformMatrix4fv(mvLocation, false, modelViewMatrixStack[modelViewMatrixStack.length - 1]);
-			mcCtx.uniformMatrix4fv(projLocation, false, projMatrixStack[projMatrixStack.length - 1]);
-			assert(first == 0);
 			var v = lib.getJNIDataView();
+			if(curList)
+			{
+				// Capture client state at this point in time
+				return pushDrawArraysInList(curList, v, mode, first, count);
+			}
 			// Upload vertex data
 			uploadData(v, vertexData, vertexBuffer, vertexPosition, count);
 			// Upload color data
 			uploadData(v, colorData, colorBuffer, colorLocation, count);
 			// Upload tex coord data
 			uploadData(v, texCoordData, texCoordBuffer, texCoord, count);
-			// We can render each quad a separate GL_TRIANGLE_FAN
-			if(mode == 7/*QUADS*/ && (count % 4) == 0)
-			{
-				for(var i=0;i<count;i+=4)
-					mcCtx.drawArrays(mcCtx.TRIANGLE_FAN, i, 4);
-			}
-			else if(mode == mcCtx.LINES || mode == mcCtx.LINE_STRIP || mode == mcCtx.TRIANGLE_FAN)
-			{
-				mcCtx.drawArrays(mode, first, count);
-			}
-			else
-			{
-				debugger;
-			}
+			drawArraysImpl(mode, first, count);
 		},
 		Java_org_lwjgl_opengl_GL11_nglDisableClientState(lib, v, funcPtr)
 		{
