@@ -411,7 +411,7 @@
 			mcCtx.blitFramebuffer(0, 0, 1024, 768, 0, 0, 1024, 768, mcCtx.COLOR_BUFFER_BIT, mcCtx.NEAREST);
 			mcCtx.bindFramebuffer(mcCtx.DRAW_FRAMEBUFFER, mainFb);
 			frameCount++;
-			if(frameCount == 0)
+			if(frameCount == frameLimit)
 			{
 				console.warn("Stopping");
 				return new Promise(function(){});
