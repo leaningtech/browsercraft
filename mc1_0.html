@@ -242,7 +242,7 @@
 	mcCanvas.addEventListener("mouseup", mouseHandler);
 	function keyHandler(e)
 	{
-		eventQueue.push({type:e.type, keyCode:e.keyCode});
+		eventQueue.push({type:e.type, keyCode:e.key.charCodeAt(0)});
 	}
 	mcCanvas.addEventListener("keydown", keyHandler);
 	mcCanvas.addEventListener("keyup", keyHandler);
@@ -1043,9 +1043,12 @@
 		{
 			return Number(eventPtr);
 		},
-		Java_org_lwjgl_opengl_LinuxKeyboard_lookupString()
+		async Java_org_lwjgl_opengl_LinuxKeyboard_lookupString(lib, eventPtr, buffer)
 		{
 			// Only support single chars
+			var bufferAddr = Number(await buffer.address());
+			var v = lib.getJNIDataView();
+			v.setInt8(bufferAddr, Number(eventPtr));
 			return 1;
 		}
 	};
