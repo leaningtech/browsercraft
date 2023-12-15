@@ -118,6 +118,11 @@
 			mcCtx.disableVertexAttribArray(attributeLocation);
 		}
 	}
+	function checkNoList(list)
+	{
+		if(list != null)
+			throw new Error("Unsupported command in list");
+	}
 	// Fix the sampler to texture unit 0
 	mcCtx.uniform1i(samplerLocation, 0);
 	var curList = null;
@@ -279,7 +284,7 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglGetString(lib, id, funcPtr)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			// Special case GL_EXTENSION for now
 			if(id == 0x1F03)
 			{
@@ -293,7 +298,7 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglGetIntegerv(lib, id, memPtr, funcPtr)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			var v = lib.getJNIDataView();
 			var buf = new Int32Array(v.buffer, Number(memPtr), 4);
 			if(id == /*GL_VIEWPORT*/0xba2)
@@ -310,7 +315,7 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglGetError()
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			// We like living dangerously
 			return 0;
 		},
@@ -319,12 +324,12 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglClearColor(lib, r, g, b, a, funcPtr)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			return mcCtx.clearColor(r, g, b, a);
 		},
 		Java_org_lwjgl_opengl_GL11_nglClear(lib, a, funcPtr)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			mcCtx.clear(a);
 		},
 		Java_org_lwjgl_opengl_LinuxContextImplementation_nSwapBuffers()
@@ -363,12 +368,12 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglLoadIdentity(lib, funcPtr)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			glMatrix.mat4.identity(getCurMatrixTop());
 		},
 		Java_org_lwjgl_opengl_GL11_nglOrtho(lib, left, right, bottom, top, nearVal, farVal, funcPtr)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			var m = getCurMatrixTop();
 			var o = glMatrix.mat4.create();
 			glMatrix.mat4.ortho(o, left, right, bottom, top, nearVal, farVal);
@@ -385,12 +390,12 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglViewport(lib, x, y, width, height, funcPtr)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			mcCtx.viewport(x, y, width, height);
 		},
 		Java_org_lwjgl_opengl_GL11_nglDisable(lib, a, funcPtr)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			if(a == mcCtx.BLEND)
 				mcCtx.disable(a);
 			else if(a == 0xde1/*GL_TEXTURE_2D*/)
@@ -400,7 +405,7 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglEnable(lib, a, funcPtr)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			if(a == mcCtx.BLEND)
 				mcCtx.enable(a);
 			else if(a == 0xde1/*GL_TEXTURE_2D*/)
@@ -410,7 +415,7 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglGenTextures(lib, n, memPtr, funcPtr)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			var v = lib.getJNIDataView();
 			var buf = new Int32Array(v.buffer, Number(memPtr), n);
 			for(var i=0;i<n;i++)
@@ -422,18 +427,18 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglBindTexture(lib, target, id, funcPtr)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			assert(target == mcCtx.TEXTURE_2D);
 			mcCtx.bindTexture(target, textureObjects[id]);
 		},
 		Java_org_lwjgl_opengl_GL11_nglTexParameteri(lib, target, pname, param, funcPtr)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			mcCtx.texParameteri(target, pname, param);
 		},
 		Java_org_lwjgl_opengl_GL11_nglTexImage2D(lib, target, level, internalFormat, width, height, border, format, type, memPtr, funcPtr)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			assert(target == mcCtx.TEXTURE_2D);
 			var v = lib.getJNIDataView();
 			// Build an unbound array, WebGL will truncate as needed
@@ -541,17 +546,17 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglColor4f(lib, r, g, b, a, funcPtr)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			mcCtx.vertexAttrib4f(colorLocation, r, g, b, a);
 		},
 		Java_org_lwjgl_opengl_GL11_nglAlphaFunc()
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			console.log("glAlphaFunc");
 		},
 		Java_org_lwjgl_opengl_GL11_nglGenLists(lib, range, funcPtr)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			var ret = cmdLists.length;
 			for(var i=0;i<range;i++)
 				cmdLists.push({});
@@ -559,7 +564,7 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglNewList(lib, list, mode, funcPtr)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			assert(mode == 0x1300/*GL_COMPILE*/);
 			curList = cmdLists[list];
 		},
@@ -578,22 +583,22 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglShadeModel()
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			console.log("glShaderModel");
 		},
 		Java_org_lwjgl_opengl_GL11_nglClearDepth()
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			console.log("glClearDepth");
 		},
 		Java_org_lwjgl_opengl_GL11_nglDepthFunc()
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			console.log("glDepthFunc");
 		},
 		Java_org_lwjgl_opengl_GL11_nglCullFace()
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			console.log("glCullFace");
 		},
 		Java_org_lwjgl_opengl_GL11_nglPushMatrix(lib, funcPtr)
@@ -610,7 +615,7 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglMultMatrixf(lib, memPtr, funcPtr)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			var m = getCurMatrixTop();
 			var v = lib.getJNIDataView();
 			var buf = new Float32Array(v.buffer, Number(memPtr), 16);
@@ -619,29 +624,29 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglRotatef(lib, angle, x, y, z, funcPtr)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			var m = getCurMatrixTop();
 			var out = glMatrix.mat4.create();
 			setCurMatrixTop(glMatrix.mat4.rotate(out, m, angle * Math.PI / 180.0, glMatrix.vec3.fromValues(x, y, z)));
 		},
 		Java_org_lwjgl_opengl_GL11_nglDepthMask()
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			console.log("glDepthMask");
 		},
 		Java_org_lwjgl_opengl_GL11_nglBlendFunc(lib, sfactor, dfactor)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			mcCtx.blendFunc(sfactor, dfactor);
 		},
 		Java_org_lwjgl_opengl_GL11_nglColorMask(lib, r, g, b, a, funcPtr)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			mcCtx.colorMask(r, g, b, a);
 		},
 		Java_org_lwjgl_opengl_GL11_nglCopyTexSubImage2D(lib, target, level, xoffset, yoffset, x, y, width, height, funcPtr)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			mcCtx.copyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height);
 		},
 		Java_org_lwjgl_opengl_GL11_nglScalef(lib, x, y, z, funcPtr)
@@ -654,17 +659,17 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglCallLists()
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			console.log("glCallLists");
 		},
 		Java_org_lwjgl_opengl_GL11_nglFlush()
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			mcCtx.flush();
 		},
 		Java_org_lwjgl_opengl_GL11_nglTexSubImage2D(lib, target, level, xoffset, yoffset, width, height, format, type, memPtr, funcPtr)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			assert(target == mcCtx.TEXTURE_2D);
 			var v = lib.getJNIDataView();
 			// Build an unbound array, WebGL will truncate as needed
@@ -673,7 +678,7 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglGetFloatv(lib, a, memPtr, funcPtr)
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			var v = lib.getJNIDataView();
 			var buf = new Float32Array(v.buffer, Number(memPtr), 16);
 			if(a == /*GL_MODELVIEW_MATRIX*/0xba6)
@@ -695,57 +700,58 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglFogfv()
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			console.log("glFog");
 		},
 		Java_org_lwjgl_opengl_GL11_nglNormal3f()
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			console.log("glNormal3f");
 		},
 		Java_org_lwjgl_opengl_GL11_nglFogi()
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			console.log("glFogi");
 		},
 		Java_org_lwjgl_opengl_GL11_nglFogf()
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			console.log("glFogf");
 		},
 		Java_org_lwjgl_opengl_GL11_nglColorMaterial()
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			console.log("glColorMaterial");
 		},
 		Java_org_lwjgl_opengl_GL11_nglCallList()
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			console.log("glCallList");
 		},
 		Java_org_lwjgl_opengl_GL13_nglActiveTexture()
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			console.log("glActiveTexture");
 		},
 		Java_org_lwjgl_opengl_GL11_nglLightfv()
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			console.log("glLightfv");
 		},
 		Java_org_lwjgl_opengl_GL11_nglLightModelfv()
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			console.log("glLightModelfv");
 		},
 		Java_org_lwjgl_opengl_GL11_nglNormalPointer()
 		{
-			assert(curList == null);
+			if(curList)
+				return;
 			console.log("glNormalPointer");
 		},
 		Java_org_lwjgl_opengl_GL13_nglMultiTexCoord2f()
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			console.log("glMultiTexCoord2f");
 		},
 		Java_org_lwjgl_opengl_GL13_nglClientActiveTexture()
@@ -756,7 +762,7 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglLineWidth()
 		{
-			assert(curList == null);
+			checkNoList(curList);
 			console.log("glLineWidth");
 		},
 		// These stubs make sure audio creation fails sooner rather than later
