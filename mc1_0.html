@@ -615,6 +615,7 @@
 			checkNoList(curList);
 			assert(mode == 0x1300/*GL_COMPILE*/);
 			curList = cmdLists[list];
+			assert(curList.length == 0);
 		},
 		Java_org_lwjgl_opengl_GL11_nglEndList(lib, funcPtr)
 		{
