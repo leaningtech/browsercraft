@@ -7,7 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js" referrerpolicy="no-referrer"></script>
   </head>
   <body style="width:100%;height:100%;margin:0;">
-   <canvas id="mc" width="1024" height="768" tabIndex="-1"></canvas>
+   <canvas id="mc" width="1000" height="500" tabIndex="-1"></canvas>
    <div id="display" style="width:100%;height:100%;position:absolute;top:0;left:0px;visibility:hidden;">
    </div>
    <script>
@@ -214,7 +214,7 @@
 	// We need to use an FBO as the main target to support copyTexSubImage2D that seems broken otherwise
 	var fbTexture = mcCtx.createTexture();
 	mcCtx.bindTexture(mcCtx.TEXTURE_2D, fbTexture);
-	mcCtx.texImage2D(mcCtx.TEXTURE_2D, 0, mcCtx.RGBA, 1024, 768, 0, mcCtx.RGBA, mcCtx.UNSIGNED_BYTE, null);
+	mcCtx.texImage2D(mcCtx.TEXTURE_2D, 0, mcCtx.RGBA, 1000, 500, 0, mcCtx.RGBA, mcCtx.UNSIGNED_BYTE, null);
 	mcCtx.bindTexture(mcCtx.TEXTURE_2D, null);
 	var mainFb = mcCtx.createFramebuffer();
 	mcCtx.bindFramebuffer(mcCtx.READ_FRAMEBUFFER, mainFb);
@@ -223,7 +223,7 @@
 	// Add a depth render buffer
 	var depthRb = mcCtx.createRenderbuffer();
 	mcCtx.bindRenderbuffer(mcCtx.RENDERBUFFER, depthRb);
-	mcCtx.renderbufferStorage(mcCtx.RENDERBUFFER, mcCtx.DEPTH_COMPONENT16, 1024, 768);
+	mcCtx.renderbufferStorage(mcCtx.RENDERBUFFER, mcCtx.DEPTH_COMPONENT16, 1000, 500);
 	mcCtx.framebufferRenderbuffer(mcCtx.FRAMEBUFFER, mcCtx.DEPTH_ATTACHMENT, mcCtx.RENDERBUFFER, depthRb);
 	// Synthetize a focus event, it's needed for LWJGL logic
 	var eventQueue = [{type:"focus"}];
@@ -289,7 +289,7 @@
 		async Java_org_lwjgl_opengl_LinuxDisplay_nGetAvailableDisplayModes(lib)
 		{
 			var DisplayMode = await lib.org.lwjgl.opengl.DisplayMode;
-			var d = await new DisplayMode(1024, 768);
+			var d = await new DisplayMode(1000, 500);
 			return [d];
 		},
 		Java_org_lwjgl_opengl_LinuxDisplay_nGetCurrentGammaRamp()
@@ -348,7 +348,7 @@
 		},
 		Java_org_lwjgl_opengl_LinuxMouse_nGetWindowHeight()
 		{
-			return 768;
+			return 500;
 		},
 		Java_org_lwjgl_opengl_LinuxKeyboard_getModifierMapping()
 		{
@@ -396,8 +396,8 @@
 			{
 				buf[0] = 0;
 				buf[1] = 0;
-				buf[2] = 1024;
-				buf[3] = 768;
+				buf[2] = 1000;
+				buf[3] = 500;
 			}
 			else if(verboseLog)
 			{
@@ -428,7 +428,7 @@
 			if(verboseLog)
 				console.warn("SwapBuffer");
 			mcCtx.bindFramebuffer(mcCtx.DRAW_FRAMEBUFFER, null);
-			mcCtx.blitFramebuffer(0, 0, 1024, 768, 0, 0, 1024, 768, mcCtx.COLOR_BUFFER_BIT, mcCtx.NEAREST);
+			mcCtx.blitFramebuffer(0, 0, 1000, 500, 0, 0, 1000, 500, mcCtx.COLOR_BUFFER_BIT, mcCtx.NEAREST);
 			mcCtx.bindFramebuffer(mcCtx.DRAW_FRAMEBUFFER, mainFb);
 			frameCount++;
 			if(frameCount == frameLimit)
@@ -998,7 +998,7 @@
 		},
 		Java_org_lwjgl_opengl_LinuxMouse_nGetWindowWidth()
 		{
-			return 1024;
+			return 1000;
 		},
 		Java_org_lwjgl_opengl_LinuxMouse_nSendWarpEvent()
 		{
