@@ -463,8 +463,6 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglTexCoordPointer(lib, size, type, stride, memPtr, funcPtr)
 		{
-			if(curList)
-				return pushInList(curList, arguments);
 			texCoordData.size = size;
 			texCoordData.type = type;
 			texCoordData.stride = stride;
@@ -472,8 +470,6 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglEnableClientState(lib, v, funcPtr)
 		{
-			if(curList)
-				return pushInList(curList, arguments);
 			if(v == 0x8074/*GL_VERTEX_ARRAY*/)
 			{
 				vertexData.enabled = true;
@@ -493,8 +489,6 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglColorPointer(lib, size, type, stride, memPtr, funcPtr)
 		{
-			if(curList)
-				return pushInList(curList, arguments);
 			colorData.size = size;
 			colorData.type = type;
 			colorData.stride = stride;
@@ -502,8 +496,6 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglVertexPointer(lib, size, type, stride, memPtr, funcPtr)
 		{
-			if(curList)
-				return pushInList(curList, arguments);
 			vertexData.size = size;
 			vertexData.type = type;
 			vertexData.stride = stride;
@@ -541,8 +533,6 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglDisableClientState(lib, v, funcPtr)
 		{
-			if(curList)
-				return pushInList(curList, arguments);
 			if(v == 0x8074/*GL_VERTEX_ARRAY*/)
 			{
 				vertexData.enabled = false;
@@ -765,8 +755,6 @@
 		},
 		Java_org_lwjgl_opengl_GL11_nglNormalPointer()
 		{
-			if(curList)
-				return pushInList(curList, arguments);
 			console.log("glNormalPointer");
 		},
 		Java_org_lwjgl_opengl_GL13_nglMultiTexCoord2f()
@@ -776,8 +764,6 @@
 		},
 		Java_org_lwjgl_opengl_GL13_nglClientActiveTexture()
 		{
-			if(curList)
-				return pushInList(curList, arguments);
 			console.log("glClientActiveTexture");
 		},
 		Java_org_lwjgl_opengl_GL11_nglLineWidth()
