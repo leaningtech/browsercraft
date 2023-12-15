@@ -1056,7 +1056,7 @@
 	{
 		try
 		{
-			var ret = await cheerpjInit({version:8,javaProperties:["java.library.path=/app/fad31287c147bbc4f8e083a2b1f59d0b007e4ce2", "minecraft.launcher.brand=minecraft-launcher", "minecraft.launcher.version=2.14.12", "minecraft.client.jar=/app1.0.jar", "org.lwjgl.util.NoChecks=true"]/*,tailscaleAuthKey:"tskey-auth-kKvFtB6CNTRL-6PMx5d1cuRBAk2B2GpfdXBMHNMFjkxkZc"*/,natives:mcNatives});
+			var ret = await cheerpjInit({version:8,javaProperties:["java.library.path=/app/fad31287c147bbc4f8e083a2b1f59d0b007e4ce2", "minecraft.launcher.brand=minecraft-launcher", "minecraft.launcher.version=2.14.12", "minecraft.client.jar=/app1.0.jar", "org.lwjgl.util.NoChecks=true"],tailscaleAuthKey:"tskey-auth-k9RsJp3CNTRL-xcmTEoqDeYjUVQpzCwwUejtL5bLq9MZVS",natives:mcNatives});
 			cheerpjCreateDisplay(-1, -1, document.getElementById("display"));
 			var mainRet = await cheerpjRunMain("net.minecraft.launchwrapper.Launch", "/app/launchwrapper-1.5.jar:/app/jopt-simple-4.5.jar:/app/asm-all-4.1.jar:/app/jinput-2.0.5.jar:/app/jutils-1.0.0.jar:/app/lwjgl-2.9.0.jar:/app/lwjgl_util-2.9.0.jar:/app/1.0.jar", "--gameDir", "/files/");
 			console.log("Java process exit code:", mainRet, "elapsed:", performance.now());
