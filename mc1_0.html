@@ -71,6 +71,15 @@
 		pointer: 0,
 		buf: null
 	};
+	var normalData =
+	{
+		enabled: false,
+		size: 0,
+		type: 0,
+		stride: 0,
+		pointer: 0,
+		buf: null
+	};
 	var colorData =
 	{
 		enabled: false,
@@ -535,6 +544,10 @@
 			{
 				vertexData.enabled = true;
 			}
+			else if(v == 0x8075/*GL_NORMAL_ARRAY*/)
+			{
+				normalData.enabled = true;
+			}
 			else if(v == 0x8076/*GL_COLOR_ARRAY*/)
 			{
 				colorData.enabled = true;
@@ -583,6 +596,10 @@
 			if(v == 0x8074/*GL_VERTEX_ARRAY*/)
 			{
 				vertexData.enabled = false;
+			}
+			else if(v == 0x8075/*GL_NORMAL_ARRAY*/)
+			{
+				normalData.enabled = false;
 			}
 			else if(v == 0x8076/*GL_COLOR_ARRAY*/)
 			{
@@ -801,9 +818,12 @@
 			checkNoList(curList);
 			console.log("glLightModelfv");
 		},
-		Java_org_lwjgl_opengl_GL11_nglNormalPointer()
+		Java_org_lwjgl_opengl_GL11_nglNormalPointer(lib, type, stride, memPtr, funcPtr)
 		{
-			console.log("glNormalPointer");
+			normalData.size = 3;
+			normalData.type = type;
+			normalData.stride = stride;
+			normalData.pointer = Number(memPtr);
 		},
 		Java_org_lwjgl_opengl_GL13_nglMultiTexCoord2f()
 		{
