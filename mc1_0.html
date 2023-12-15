@@ -123,6 +123,22 @@
 		if(list != null)
 			throw new Error("Unsupported command in list");
 	}
+	function pushInList(list, args)
+	{
+		// Not an elegant solution, but it works
+		// It would be nicer to extract the actual implementation from native interfaces
+		// to avoid bringing around the library object
+		list.push({f: args.callee, a: Array.from(args)});
+	}
+	function callList(listId)
+	{
+		var l = cmdLists[listId];
+		for(var i=0;i<l.length;i++)
+		{
+			var c = l[i];
+			c.f.apply(null, c.a);
+		}
+	}
 	// Fix the sampler to texture unit 0
 	mcCtx.uniform1i(samplerLocation, 0);
 	var curList = null;
@@ -356,7 +372,7 @@
 		Java_org_lwjgl_opengl_GL11_nglMatrixMode(lib, matrixMode, funcPtr)
 		{
 			if(curList)
-				return;
+				return pushInList(curList, arguments);
 			if(matrixMode == 0x1700/*GL_MODELVIEW*/)
 				curMatrixStack = modelViewMatrixStack;
 			else if(matrixMode == 0x1701/*GL_PROJECTION*/)
@@ -383,7 +399,7 @@
 		Java_org_lwjgl_opengl_GL11_nglTranslatef(lib, x, y, z, funcPtr)
 		{
 			if(curList)
-				return;
+				return pushInList(curList, arguments);
 			var m = getCurMatrixTop();
 			var out = glMatrix.mat4.create();
 			setCurMatrixTop(glMatrix.mat4.translate(out, m, glMatrix.vec3.fromValues(x, y, z)));
@@ -448,7 +464,7 @@
 		Java_org_lwjgl_opengl_GL11_nglTexCoordPointer(lib, size, type, stride, memPtr, funcPtr)
 		{
 			if(curList)
-				return;
+				return pushInList(curList, arguments);
 			texCoordData.size = size;
 			texCoordData.type = type;
 			texCoordData.stride = stride;
@@ -457,7 +473,7 @@
 		Java_org_lwjgl_opengl_GL11_nglEnableClientState(lib, v, funcPtr)
 		{
 			if(curList)
-				return;
+				return pushInList(curList, arguments);
 			if(v == 0x8074/*GL_VERTEX_ARRAY*/)
 			{
 				vertexData.enabled = true;
@@ -478,7 +494,7 @@
 		Java_org_lwjgl_opengl_GL11_nglColorPointer(lib, size, type, stride, memPtr, funcPtr)
 		{
 			if(curList)
-				return;
+				return pushInList(curList, arguments);
 			colorData.size = size;
 			colorData.type = type;
 			colorData.stride = stride;
@@ -487,7 +503,7 @@
 		Java_org_lwjgl_opengl_GL11_nglVertexPointer(lib, size, type, stride, memPtr, funcPtr)
 		{
 			if(curList)
-				return;
+				return pushInList(curList, arguments);
 			vertexData.size = size;
 			vertexData.type = type;
 			vertexData.stride = stride;
@@ -496,7 +512,7 @@
 		Java_org_lwjgl_opengl_GL11_nglDrawArrays(lib, mode, first, count, funcPtr)
 		{
 			if(curList)
-				return;
+				return pushInList(curList, arguments);
 			// TODO: Conditional
 			mcCtx.uniformMatrix4fv(mvLocation, false, modelViewMatrixStack[modelViewMatrixStack.length - 1]);
 			mcCtx.uniformMatrix4fv(projLocation, false, projMatrixStack[projMatrixStack.length - 1]);
@@ -526,7 +542,7 @@
 		Java_org_lwjgl_opengl_GL11_nglDisableClientState(lib, v, funcPtr)
 		{
 			if(curList)
-				return;
+				return pushInList(curList, arguments);
 			if(v == 0x8074/*GL_VERTEX_ARRAY*/)
 			{
 				vertexData.enabled = false;
@@ -559,7 +575,7 @@
 			checkNoList(curList);
 			var ret = cmdLists.length;
 			for(var i=0;i<range;i++)
-				cmdLists.push({});
+				cmdLists.push([]);
 			return ret;
 		},
 		Java_org_lwjgl_opengl_GL11_nglNewList(lib, list, mode, funcPtr)
@@ -575,7 +591,7 @@
 		Java_org_lwjgl_opengl_GL11_nglColor3f()
 		{
 			if(curList)
-				return;
+				return pushInList(curList, arguments);
 			console.log("glColor3f");
 		},
 		Java_org_lwjgl_opengl_LinuxDisplay_nGetNativeCursorCapabilities()
@@ -604,13 +620,13 @@
 		Java_org_lwjgl_opengl_GL11_nglPushMatrix(lib, funcPtr)
 		{
 			if(curList)
-				return;
+				return pushInList(curList, arguments);
 			curMatrixStack.push(glMatrix.mat4.clone(curMatrixStack[curMatrixStack.length - 1]));
 		},
 		Java_org_lwjgl_opengl_GL11_nglPopMatrix(lib, funcPtr)
 		{
 			if(curList)
-				return;
+				return pushInList(curList, arguments);
 			curMatrixStack.pop();
 		},
 		Java_org_lwjgl_opengl_GL11_nglMultMatrixf(lib, memPtr, funcPtr)
@@ -652,15 +668,19 @@
 		Java_org_lwjgl_opengl_GL11_nglScalef(lib, x, y, z, funcPtr)
 		{
 			if(curList)
-				return;
+				return pushInList(curList, arguments);
 			var m = getCurMatrixTop();
 			var out = glMatrix.mat4.create();
 			setCurMatrixTop(glMatrix.mat4.scale(out, m, glMatrix.vec3.fromValues(x, y, z)));
 		},
-		Java_org_lwjgl_opengl_GL11_nglCallLists()
+		Java_org_lwjgl_opengl_GL11_nglCallLists(lib, n, type, memPtr, funcPtr)
 		{
 			checkNoList(curList);
-			console.log("glCallLists");
+			assert(type == mcCtx.UNSIGNED_INT);
+			var v = lib.getJNIDataView();
+			var buf = new Int32Array(v.buffer, Number(memPtr), n);
+			for(var i=0;i<n;i++)
+				callList(buf[i]);
 		},
 		Java_org_lwjgl_opengl_GL11_nglFlush()
 		{
@@ -723,10 +743,10 @@
 			checkNoList(curList);
 			console.log("glColorMaterial");
 		},
-		Java_org_lwjgl_opengl_GL11_nglCallList()
+		Java_org_lwjgl_opengl_GL11_nglCallList(lib, listId, funcPtr)
 		{
 			checkNoList(curList);
-			console.log("glCallList");
+			callList(listId);
 		},
 		Java_org_lwjgl_opengl_GL13_nglActiveTexture()
 		{
@@ -746,7 +766,7 @@
 		Java_org_lwjgl_opengl_GL11_nglNormalPointer()
 		{
 			if(curList)
-				return;
+				return pushInList(curList, arguments);
 			console.log("glNormalPointer");
 		},
 		Java_org_lwjgl_opengl_GL13_nglMultiTexCoord2f()
@@ -757,7 +777,7 @@
 		Java_org_lwjgl_opengl_GL13_nglClientActiveTexture()
 		{
 			if(curList)
-				return;
+				return pushInList(curList, arguments);
 			console.log("glClientActiveTexture");
 		},
 		Java_org_lwjgl_opengl_GL11_nglLineWidth()
