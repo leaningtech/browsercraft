@@ -637,7 +637,8 @@
 			checkNoList(curList);
 			assert(mode == 0x1300/*GL_COMPILE*/);
 			curList = cmdLists[list];
-			assert(curList.length == 0);
+			// Wipe out the current contents of the list if any
+			curList.length = 0;
 		},
 		Java_org_lwjgl_opengl_GL11_nglEndList(lib, funcPtr)
 		{
@@ -838,6 +839,11 @@
 		{
 			checkNoList(curList);
 			console.log("glLineWidth");
+		},
+		Java_org_lwjgl_opengl_GL11_nglPolygonOffset()
+		{
+			checkNoList(curList);
+			console.log("glPolygonOffset");
 		},
 		// These stubs make sure audio creation fails sooner rather than later
 		Java_org_lwjgl_openal_AL_nCreate()
