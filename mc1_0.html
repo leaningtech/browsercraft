@@ -468,7 +468,7 @@
 		Java_org_lwjgl_opengl_GL11_nglDisable(lib, a, funcPtr)
 		{
 			checkNoList(curList);
-			if(a == mcCtx.BLEND)
+			if(a == mcCtx.BLEND || a == mcCtx.CULL_FACE)
 				mcCtx.disable(a);
 			else if(a == 0xde1/*GL_TEXTURE_2D*/)
 				mcCtx.uniform1f(texMaskLocation, 0);
@@ -478,7 +478,7 @@
 		Java_org_lwjgl_opengl_GL11_nglEnable(lib, a, funcPtr)
 		{
 			checkNoList(curList);
-			if(a == mcCtx.BLEND)
+			if(a == mcCtx.BLEND || a == mcCtx.CULL_FACE)
 				mcCtx.enable(a);
 			else if(a == 0xde1/*GL_TEXTURE_2D*/)
 				mcCtx.uniform1f(texMaskLocation, 1);
@@ -645,10 +645,10 @@
 			checkNoList(curList);
 			console.log("glDepthFunc");
 		},
-		Java_org_lwjgl_opengl_GL11_nglCullFace()
+		Java_org_lwjgl_opengl_GL11_nglCullFace(lib, mode, funcPtr)
 		{
 			checkNoList(curList);
-			console.log("glCullFace");
+			mcCtx.cullFace(mode);
 		},
 		Java_org_lwjgl_opengl_GL11_nglPushMatrix(lib, funcPtr)
 		{
