@@ -98,6 +98,15 @@
 		pointer: 0,
 		buf: null
 	};
+	// TODO: Make buffers resizeable if needed
+	var immediateModeData =
+	{
+		mode: 0,
+		vertexBuf: new Float32Array(32),
+		vertexPos: 0,
+		texCoordBuf: new Float32Array(32),
+		texCoordPos: 0
+	};
 	var verboseLog = false;
 	var frameCount = 0;
 	// Set to a non-zero value to stop after a certain number of frames
@@ -869,6 +878,51 @@
 			checkNoList(curList);
 			if(verboseLog)
 				console.log("glPolygonOffset");
+		},
+		Java_org_lwjgl_opengl_GL11_nglBegin(lib, mode, funcPtr)
+		{
+			checkNoList(curList);
+			immediateModeData.mode = mode;
+			immediateModeData.vertexPos = 0;
+			immediateModeData.texCoordPos = 0;
+		},
+		Java_org_lwjgl_opengl_GL11_nglTexCoord2f(lib, x, y, funcPtr)
+		{
+			checkNoList(curList);
+			var curPos = immediateModeData.texCoordPos;
+			if(curPos > immediateModeData.texCoordBuf.length)
+			{
+				console.log("glTexCoord2f overflow");
+				return;
+			}
+			immediateModeData.texCoordBuf[curPos] = x;
+			immediateModeData.texCoordBuf[curPos + 1] = y;
+			immediateModeData.texCoordPos = curPos + 2;
+		},
+		Java_org_lwjgl_opengl_GL11_nglVertex3f(lib, x, y, z, funcPtr)
+		{
+			checkNoList(curList);
+			var curPos = immediateModeData.vertexPos;
+			if(curPos > immediateModeData.vertexBuf.length)
+			{
+				console.log("glVertex3f overflow");
+				return;
+			}
+			immediateModeData.vertexBuf[curPos] = x;
+			immediateModeData.vertexBuf[curPos + 1] = y;
+			immediateModeData.vertexBuf[curPos + 2] = z;
+			immediateModeData.vertexPos = curPos + 3;
+		},
+		Java_org_lwjgl_opengl_GL11_nglEnd(lib, funcPtr)
+		{
+			checkNoList(curList);
+			// Upload vertex data
+			uploadDataImpl(immediateModeData.vertexBuf.subarray(0, immediateModeData.vertexPos), vertexBuffer, vertexPosition, 3, mcCtx.FLOAT, 3 * 4);
+			// TODO: Should we do something about color data?
+			// Upload tex coord data
+			uploadDataImpl(immediateModeData.texCoordBuf.subarray(0, immediateModeData.texCoordPos), texCoordBuffer, texCoord, 2, mcCtx.FLOAT, 2 * 4);
+			// NOTE: We count vertices
+			drawArraysImpl(immediateModeData.mode, 0, immediateModeData.vertexPos / 3);
 		},
 		// These stubs make sure audio creation fails sooner rather than later
 		Java_org_lwjgl_openal_AL_nCreate()
