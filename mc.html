@@ -194,7 +194,7 @@
 			for(var i=0;i<count;i+=4)
 				mcCtx.drawArrays(mcCtx.TRIANGLE_FAN, i, 4);
 		}
-		else if(mode == mcCtx.LINES || mode == mcCtx.LINE_STRIP || mode == mcCtx.TRIANGLE_FAN)
+		else if(mode == mcCtx.LINES || mode == mcCtx.LINE_STRIP || mode == mcCtx.TRIANGLE_STRIP || mode == mcCtx.TRIANGLE_FAN)
 		{
 			mcCtx.drawArrays(mode, first, count);
 		}
