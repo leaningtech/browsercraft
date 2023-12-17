@@ -115,6 +115,13 @@
 	{
 		curMatrixStack[curMatrixStack.length - 1] = m;
 	}
+	function uploadDataImpl(buf, buffer, attributeLocation, size, type, stride)
+	{
+		mcCtx.bindBuffer(mcCtx.ARRAY_BUFFER, buffer);
+		mcCtx.bufferData(mcCtx.ARRAY_BUFFER, buf, mcCtx.STATIC_DRAW);
+		mcCtx.vertexAttribPointer(attributeLocation, size, type, type != mcCtx.FLOAT, stride, 0);
+		mcCtx.enableVertexAttribArray(attributeLocation);
+	}
 	function uploadData(v, data, buffer, attributeLocation, count)
 	{
 		if(data.enabled)
@@ -126,10 +133,7 @@
 				assert(v && data.pointer);
 				buf = new Uint8Array(v.buffer, data.pointer, data.stride * count);
 			}
-			mcCtx.bindBuffer(mcCtx.ARRAY_BUFFER, buffer);
-			mcCtx.bufferData(mcCtx.ARRAY_BUFFER, buf, mcCtx.STATIC_DRAW);
-			mcCtx.vertexAttribPointer(attributeLocation, data.size, data.type, data.type != mcCtx.FLOAT, data.stride, 0);
-			mcCtx.enableVertexAttribArray(attributeLocation);
+			uploadDataImpl(buf, buffer, attributeLocation, data.size, data.type, data.stride);
 		}
 		else
 		{
