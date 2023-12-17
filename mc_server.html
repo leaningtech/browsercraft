@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>CheerpJ test</title>
+    <script src="mcutils.js"></script>
+    <script src="https://127.0.0.1:8084/cj3loader.js"></script>
+  </head>
+  <body>
+    <script>
+	async function runServer()
+	{
+		await cheerpjInit({tailscaleAuthKey:"tskey-auth-k9RsJp3CNTRL-xcmTEoqDeYjUVQpzCwwUejtL5bLq9MZVS"});
+		// TODO: Run with nogui
+		cheerpjCreateDisplay(800, 600);
+		// The server needs to write a few files to its cwd, copy it over to /files/
+		await installFile("https://piston-data.mojang.com/v1/objects/d8321edc9470e56b8ad5c67bbd16beba25843336/server.jar", "/files/server_1.2.5.jar");
+		// Copy over a modified configuration allowing any client to connect
+		await installFile("/server.properties", "/files/server.properties");
+		await cheerpjRunJar("/files/server_1.2.5.jar");
+	}
+	runServer();
+    </script>
+  </body>
+</html>
