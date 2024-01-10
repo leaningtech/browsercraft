@@ -1,0 +1,3 @@
+[submodule "cheerpj-natives"]
+	path = cheerpj-natives
+	url = https://github.com/leaningtech/cheerpj-natives.git

@@ -12,7 +12,7 @@
 			import MinecraftClient from "./minecraft-web.js";
 			await cheerpjInit({
 				version: 8,
-				javaProperties: ["java.library.path=/app/natives", "org.lwjgl.util.NoChecks=true"],
+				javaProperties: ["java.library.path=/app/cheerpj-natives/natives", "org.lwjgl.util.NoChecks=true"],
 				//tailscaleAuthKey:"tskey-auth-k9RsJp3CNTRL-xcmTEoqDeYjUVQpzCwwUejtL5bLq9MZVS",
 			});
 			MinecraftClient.register();
