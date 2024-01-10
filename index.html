@@ -9,6 +9,8 @@
   <body style="width:100%;height:100%;margin:0;">
   	<canvas id="mc" width="854" height="480" tabIndex="-1"></canvas>
 
+		<progress id="progress" max="1" value="0"></progress>
+
 		<!-- We're implementing rendering ourselves,  -->
 		<div id="display" style="width:100%;height:100%;position:absolute;top:0;left:0px;visibility:hidden;">
 		</div>
@@ -16,11 +18,13 @@
 		<script>
 			async function initialize()
 			{
+				const progress = document.getElementById("progress");
 				try
 				{
 					var ret = await cheerpjInit({version:8,javaProperties:["java.library.path=/app/natives", "org.lwjgl.util.NoChecks=true"],tailscaleAuthKey:"tskey-auth-k9RsJp3CNTRL-xcmTEoqDeYjUVQpzCwwUejtL5bLq9MZVS"});
 					cheerpjCreateDisplay(-1, -1, document.getElementById("display"));
-					await installFile("https://piston-data.mojang.com/v1/objects/4a2fac7504182a97dcbcd7560c6392d7c8139928/client.jar", "/files/client_1.2.5.jar");
+					await installFile(progress, "https://piston-data.mojang.com/v1/objects/4a2fac7504182a97dcbcd7560c6392d7c8139928/client.jar", "/files/client_1.2.5.jar");
+					progress.removeAttribute("value"); // Indeterminate
 					var mainRet = await cheerpjRunMain("net.minecraft.client.Minecraft", "/app/lwjgl-2.9.0.jar:/app/lwjgl_util-2.9.0.jar:/files/client_1.2.5.jar");
 					console.log("Java process exit code:", mainRet, "elapsed:", performance.now());
 				}

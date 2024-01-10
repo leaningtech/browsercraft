@@ -1,16 +1,33 @@
-async function installFile(url, destPath)
-{
-	var response = await fetch(url);
-	var buf = await response.arrayBuffer();
-	var bytes = new Uint8Array(buf);
-	return new Promise(function(f, r)
-	{
-		cheerpOSOpen(cjFDs, destPath, "w", function(fd)
-		{
-			cheerpOSWrite(cjFDs, fd, bytes, 0, bytes.length, function(w)
-			{
+/**
+ * @param {HTMLProgressElement} progressEl
+ * @param {string} url
+ * @param {string} destPath
+ * @returns {Promise<void>}
+ */
+async function installFile(progressEl, url, destPath) {
+	const response = await fetch(url);
+	const reader = response.body.getReader();
+	const contentLength = +response.headers.get('Content-Length');
+
+	const bytes = new Uint8Array(contentLength);
+	progressEl.max = contentLength;
+
+	let pos = 0;
+	while (true) {
+		const { done, value } = await reader.read();
+		if (done)
+			break;
+		bytes.set(value, pos);
+		pos += value.length;
+		progressEl.value += value.length;
+	}
+
+	// Write to CheerpJ filesystem
+	return new Promise((resolve, reject) => {
+		cheerpOSOpen(cjFDs, destPath, "w", fd => {
+			cheerpOSWrite(cjFDs, fd, bytes, 0, bytes.length, w => {
 				cheerpOSClose(cjFDs, fd);
-				f();
+				resolve();
 			});
 		});
 	});
