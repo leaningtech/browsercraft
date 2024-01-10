@@ -248,8 +248,25 @@ function convertMouseButton(button) {
 	return button + 1;
 }
 
+/**
+ * If null, the game does not want the mouse pointer locked.
+ * @type {{ x: number, y: number } | null}
+ */
+let lockedMousePos = null;
+
 mcCanvas.addEventListener("mousemove", evt => {
-	const [x, y] = convertMousePos(evt.clientX, evt.clientY);
+	let [x, y] = convertMousePos(evt.clientX, evt.clientY);
+
+	// If the pointer is locked, we can't use clientX/clientY
+	if (lockedMousePos) {
+		x = lockedMousePos.x += evt.movementX;
+		y = lockedMousePos.y += evt.movementY;
+
+		if (!document.pointerLockElement) {
+			// Game still wants the pointer locked, but it's not
+			Java_org_lwjgl_opengl_LinuxDisplay_nGrabPointer();
+		}
+	}
 
 	if (eventQueue[0]?.type == evt.type) {
 		// Update unhandled event
@@ -1187,11 +1204,13 @@ async function Java_org_lwjgl_opengl_LinuxEvent_nGetButtonButton(lib, buffer)
 function Java_org_lwjgl_opengl_LinuxDisplay_nGrabPointer()
 {
 	mcCanvas.requestPointerLock({ unadjustedMovement: true });
+	lockedMousePos = { x: 0, y: 0 };
 }
 
 function Java_org_lwjgl_opengl_LinuxDisplay_nUngrabPointer()
 {
 	document.exitPointerLock();
+	lockedMousePos = null;
 }
 
 function Java_org_lwjgl_opengl_LinuxDisplay_nDefineCursor()
