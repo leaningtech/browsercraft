@@ -232,7 +232,7 @@ mcCtx.framebufferRenderbuffer(mcCtx.FRAMEBUFFER, mcCtx.DEPTH_ATTACHMENT, mcCtx.R
 // Synthetize a focus event, it's needed for LWJGL logic
 var eventQueue = [{type:"focus"}];
 
-function converMousePos(x, y) {
+function convertMousePos(x, y) {
 	// We have a framebuffer of 1000x500, but Minecraft renders into the bottom left corner of it.
 	const offsetX = 0;
 	const offsetY = mcCanvas.height - 500;
@@ -243,8 +243,13 @@ function converMousePos(x, y) {
 	return [x * xRatio - offsetX, y * yRatio - offsetY];
 }
 
+/** Convert from MouseEvent.button to X11 mouse button */
+function convertMouseButton(button) {
+	return button + 1;
+}
+
 mcCanvas.addEventListener("mousemove", evt => {
-	const [x, y] = converMousePos(evt.clientX, evt.clientY);
+	const [x, y] = convertMousePos(evt.clientX, evt.clientY);
 
 	if (eventQueue[0]?.type == evt.type) {
 		// Update unhandled event
@@ -255,11 +260,12 @@ mcCanvas.addEventListener("mousemove", evt => {
 	}
 });
 function mouseHandler(evt) {
-	const [x, y] = converMousePos(evt.clientX, evt.clientY);
-	eventQueue.push({ type: evt.type, x, y });
+	const [x, y] = convertMousePos(evt.clientX, evt.clientY);
+	eventQueue.push({ type: evt.type, x, y, button: convertMouseButton(evt.button) });
 }
 mcCanvas.addEventListener("mousedown", mouseHandler);
 mcCanvas.addEventListener("mouseup", mouseHandler);
+mcCanvas.addEventListener("contextmenu", evt => evt.preventDefault());
 function keyHandler(e)
 {
 	eventQueue.push({type:e.type, keyCode:e.key.charCodeAt(0)});
@@ -385,8 +391,7 @@ function Java_org_lwjgl_opengl_LinuxDisplay_nSetTitle()
 
 function Java_org_lwjgl_opengl_LinuxMouse_nGetButtonCount()
 {
-	// TODO: Expand for right click
-	return 1;
+	return 3;
 }
 
 function Java_org_lwjgl_opengl_LinuxMouse_nQueryPointer()
@@ -1063,7 +1068,7 @@ async function Java_org_lwjgl_opengl_LinuxEvent_createEventBuffer(lib)
 {
 	// This is intended to represent a X11 event, but we are free to use any layout
 	var ByteBuffer = await lib.java.nio.ByteBuffer;
-	return await ByteBuffer.allocateDirect(12);
+	return await ByteBuffer.allocateDirect(4 * 8);
 }
 
 async function Java_org_lwjgl_opengl_LinuxEvent_nNextEvent(lib, windowId, buffer)
@@ -1081,11 +1086,13 @@ async function Java_org_lwjgl_opengl_LinuxEvent_nNextEvent(lib, windowId, buffer
 			v.setInt32(0, /*ButtonPress*/4, true);
 			v.setInt32(4, e.x, true);
 			v.setInt32(8, e.y, true);
+			v.setInt32(12, e.button, true);
 			break;
 		case "mouseup":
 			v.setInt32(0, /*ButtonRelease*/5, true);
 			v.setInt32(4, e.x, true);
 			v.setInt32(8, e.y, true);
+			v.setInt32(12, e.button, true);
 			break;
 		case "mousemove":
 			v.setInt32(0, /*MotionNotify*/6, true);
@@ -1171,10 +1178,10 @@ async function Java_org_lwjgl_opengl_LinuxEvent_nGetButtonType(lib, buffer)
 	return v.getInt32(0, true);
 }
 
-function Java_org_lwjgl_opengl_LinuxEvent_nGetButtonButton()
+async function Java_org_lwjgl_opengl_LinuxEvent_nGetButtonButton(lib, buffer)
 {
-	// X11 button 1 (left)
-	return 1;
+	const v = lib.getJNIDataView();
+	return v.getInt32(12, true);
 }
 
 function Java_org_lwjgl_opengl_LinuxDisplay_nGrabPointer()
