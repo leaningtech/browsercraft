@@ -1186,6 +1186,12 @@ async function Java_org_lwjgl_opengl_LinuxEvent_nGetButtonButton(lib, buffer)
 
 function Java_org_lwjgl_opengl_LinuxDisplay_nGrabPointer()
 {
+	mcCanvas.requestPointerLock({ unadjustedMovement: true });
+}
+
+function Java_org_lwjgl_opengl_LinuxDisplay_nUngrabPointer()
+{
+	document.exitPointerLock();
 }
 
 function Java_org_lwjgl_opengl_LinuxDisplay_nDefineCursor()
@@ -1385,6 +1391,7 @@ export default {
 	Java_org_lwjgl_opengl_LinuxEvent_nGetButtonType,
 	Java_org_lwjgl_opengl_LinuxEvent_nGetButtonButton,
 	Java_org_lwjgl_opengl_LinuxDisplay_nGrabPointer,
+	Java_org_lwjgl_opengl_LinuxDisplay_nUngrabPointer,
 	Java_org_lwjgl_opengl_LinuxDisplay_nDefineCursor,
 	Java_org_lwjgl_opengl_LinuxMouse_nGetWindowWidth,
 	Java_org_lwjgl_opengl_LinuxMouse_nSendWarpEvent,
