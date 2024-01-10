@@ -1,7 +1,7 @@
 // Load the glMatrix library
 await import("https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js");
 
-const mcCanvas = document.getElementById("mc");
+const mcCanvas = document.querySelector("minecraft-client").shadowRoot.querySelector("canvas"); // TODO: Find a more portable way to get the *current* canvas
 const mcCtx = mcCanvas.getContext("webgl2", {antialias: false, alpha: false});
 
 var vertexShaderSrc = `
@@ -298,7 +298,7 @@ function Java_org_lwjgl_opengl_LinuxDisplay_setErrorHandler()
 {
 }
 
-function Java_org_lwjgl_opengl_LinuxDisplay_openDisplay()
+function Java_org_lwjgl_opengl_LinuxDisplay_openDisplay(lib)
 {
 }
 
