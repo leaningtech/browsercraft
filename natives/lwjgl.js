@@ -1,7 +1,9 @@
 // Load the glMatrix library
 await import("https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/3.4.2/gl-matrix-min.js");
-var mcCanvas = document.getElementById("mc");
-var mcCtx = mcCanvas.getContext("webgl2", {antialias: false, alpha: false});
+
+const mcCanvas = document.getElementById("mc");
+const mcCtx = mcCanvas.getContext("webgl2", {antialias: false, alpha: false});
+
 var vertexShaderSrc = `
 	attribute vec4 aVertexPosition;
 	attribute vec4 aColor;
@@ -229,16 +231,32 @@ mcCtx.renderbufferStorage(mcCtx.RENDERBUFFER, mcCtx.DEPTH_COMPONENT16, 1000, 500
 mcCtx.framebufferRenderbuffer(mcCtx.FRAMEBUFFER, mcCtx.DEPTH_ATTACHMENT, mcCtx.RENDERBUFFER, depthRb);
 // Synthetize a focus event, it's needed for LWJGL logic
 var eventQueue = [{type:"focus"}];
-mcCanvas.addEventListener("mousemove", function(e)
-{
-	// TODO: Merge events
-	if(eventQueue.length)
-		return;
-	eventQueue.push({type:e.type, x:e.clientX, y:e.clientY});
+
+function converMousePos(x, y) {
+	// We have a framebuffer of 1000x500, but Minecraft renders into the bottom left corner of it.
+	const offsetX = 0;
+	const offsetY = mcCanvas.height - 500;
+
+	const xRatio = mcCanvas.width / mcCanvas.clientWidth;
+	const yRatio = mcCanvas.height / mcCanvas.clientHeight;
+
+	return [x * xRatio - offsetX, y * yRatio - offsetY];
+}
+
+mcCanvas.addEventListener("mousemove", evt => {
+	const [x, y] = converMousePos(evt.clientX, evt.clientY);
+
+	if (eventQueue[0]?.type == evt.type) {
+		// Update unhandled event
+		eventQueue[0].x = x;
+		eventQueue[0].y = y;
+	} else {
+		eventQueue.push({ type: evt.type, x, y });
+	}
 });
-function mouseHandler(e)
-{
-	eventQueue.push({type:e.type, x:e.clientX, y:e.clientY});
+function mouseHandler(evt) {
+	const [x, y] = converMousePos(evt.clientX, evt.clientY);
+	eventQueue.push({ type: evt.type, x, y });
 }
 mcCanvas.addEventListener("mousedown", mouseHandler);
 mcCanvas.addEventListener("mouseup", mouseHandler);
