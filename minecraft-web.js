@@ -44,6 +44,11 @@ template.innerHTML = `
     :host([hidden]) {
       display: none;
     }
+
+    canvas {
+      width: inherit;
+      height: inherit;
+    }
   </style>
   <canvas width="854" height="480" tabindex="-1"></canvas>
   <div data-display style="width:100%;height:100%;position:absolute;top:0;left:0px;visibility:hidden;"></div>
