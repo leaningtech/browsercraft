@@ -1,5 +1,3 @@
-console.log(window.cheerpOSOpen)
-
 /**
  * Downloads a file from a url and writes it to the CheerpJ filesystem.
  * @param {string} url
