@@ -7,19 +7,65 @@
     <script src="https://cjrtnc.leaningtech.com/3_20231218_321/cj3loader.js"></script>
 		<script defer data-domain="minecraft.cheerpj.com" src="https://plausible.leaningtech.com/js/script.js"></script>
 		<link rel="stylesheet" href="style.css">
-  </head>
+
+		<meta name="description" content="Open-source port of Minecraft to the web. Play Minecraft in your browser!">
+		<meta property="og:title" content="Minecraft Web">
+		<meta property="og:description" content="Open-source port of Minecraft to the web. Play Minecraft in your browser!">
+		<meta property="og:url" content="https://minecraft.cheerpj.com">
+	</head>
   <body>
 		<header>
 			<h1>Minecraft Web</h1>
-
 			<minecraft-client></minecraft-client>
-
+			<div class="controls">
+				<button id="fullscreen" title="Enter fullscreen">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-maximize"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+				</button>
+				<a href="https://twitter.com/intent/tweet?url=https://minecraft.cheerpj.com" title="Share on X (formerly known as Twitter)">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-twitter"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+				</a>
+				<button id="share" title="Share">
+					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+				</button>
+			</div>
 			<a href="https://github.com/leaningtech/minecraft-web" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#fff; color:#151513; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
 		</header>
 		<main>
+			<h2>What is this</h2>
 			<p>
 				<b>Minecraft Web</b> is an open-source port of Minecraft to the web using <a href="https://cheerpj.com">CheerpJ</a>, a Java runtime for modern browsers.
-				It runs unmodified client and server JARs.
+			</p>
+
+			<h2>What this is not</h2>
+			<ul>
+				<li><a href="https://classic.minecraft.net">Minecraft Classic</a>, an alpha version of Minecraft playable in the browser</li>
+				<li>Minecraft Bedrock Edition</li>
+				<li>The latest version of Minecraft. Newer releases of Minecraft use a newer version of Java and OpenGL which we currently do not support.</li>
+				<li>A modified version of Minecraft. We do not modify the game in any way, we just run the original JARs.</li>
+				<li>A reimplementation of Minecraft in another programming language</li>
+			</ul>
+
+			<h2>How it works</h2>
+			<p>
+				<a href="https://labs.leaningtech.com/cheerpj3/guides/Implementing-Java-native-methods-in-JavaScript">CheerpJ supports specifying JavaScript implementations of Java native methods.</a>
+				We use this feature to implement portions of LWJGL (a library used by Minecraft for rendering, audio, input, etc.) in JavaScript. On desktop, LWJGL uses C++ implementations of these methods.
+			</p>
+			<p>
+				<a href="https://github.com/leaningtech/cheerpj-natives/blob/main/natives/lwjgl.js">View the LWJGL implementation.</a>
+			</p>
+			<p>
+				This project is a work-in-progress and not everything works yet. In particular:
+			</p>
+			<ul>
+				<li>Audio is not supported</li>
+				<li>Many textures are not rendered correctly</li>
+				<li>Probably other subtle problems</li>
+			</ul>
+			<p>
+				None of these issues are fundamental limitations, they just haven't been implemented yet.
+			</p>
+			<p>
+				If you're a programmer, we'd love your help in fixing these issues! <a href="https://discord.gg/7xXW6NAdHT">Join the Discord server</a> and <a href="https://github.com/leaningtech/minecraft-web">contribute on GitHub</a>.
 			</p>
 		</main>
 
@@ -31,6 +77,22 @@
 				//tailscaleAuthKey:"tskey-auth-k9RsJp3CNTRL-xcmTEoqDeYjUVQpzCwwUejtL5bLq9MZVS",
 			});
 			MinecraftClient.register();
+
+			const client = document.querySelector("minecraft-client");
+	
+			document.getElementById("fullscreen").addEventListener("click", () => client.requestFullscreen());
+			
+			const share = document.getElementById("share");
+			const shareData = {
+				title: "Minecraft Web",
+				text: "Play Minecraft in your browser!",
+				url: "https://minecraft.cheerpj.com",
+			};
+			if (navigator.canShare?.(shareData)) {
+				share.addEventListener("click", () => navigator.share(shareData));
+			} else {
+				share.remove();
+			}
     </script>
   </body>
 </html>

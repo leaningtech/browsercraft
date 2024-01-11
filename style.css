@@ -31,13 +31,48 @@ header h1 {
 
 main {
   margin: 0 auto;
+  padding: 1rem;
   max-width: 60ch;
-  width: 90%;
+  width: 100%;
+  box-sizing: border-box;
   line-height: 1.4;
+}
+
+main h2 {
+  font-size: 1.5rem;
+  margin: 1rem 0 0.5rem;
+}
+
+main li {
+  margin: 0.5rem 0;
 }
 
 @media (max-width: 900px) {
   minecraft-client {
     width: 100%;
   }
+}
+
+.controls {
+  margin: 0.5rem 0;
+}
+
+.controls > * {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+
+  width: 24px;
+  height: 24px;
+
+  margin-right: 0.5rem;
+}
+
+.controls svg {
+  stroke: #c6b8b4;
+}
+
+.controls > *:hover svg {
+  stroke: white;
 }
