@@ -39,6 +39,14 @@ template.innerHTML = `
   <style>
     :host {
       display: inline-block;
+      aspect-ratio: 854 / 480;
+
+      background: black;
+      color: #eee;
+      color-scheme: dark;
+
+      width: 854px;
+      height: 480px;
     }
 
     :host([hidden]) {
@@ -49,11 +57,62 @@ template.innerHTML = `
       width: inherit;
       height: inherit;
     }
+
+    .display {
+      width: 854px;
+      height: 480px;
+      position: absolute;
+      inset: 0;
+      visibility: hidden;
+    }
+
+    .intro {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    p {
+      max-width: 60ch;
+    }
+
+    .disclaimer {
+      font-size: 0.8em;
+      opacity: 0.5;
+    }
+
+    button {
+      padding: 0.5em 1em;
+      margin: 2em;
+    }
+
+    progress {
+      width: calc(100% - 2em);
+      margin: 1em;
+    }
+
+    *:focus {
+      outline: none;
+    }
   </style>
   <canvas width="854" height="480" tabindex="-1"></canvas>
-  <div data-display style="width:100%;height:100%;position:absolute;top:0;left:0px;visibility:hidden;"></div>
+  <div class="display"></div>
+  <div class="intro">
+    <p>
+      This is a work-in-progress web port of Minecraft 1.2.5.
+    </p>
+    <p>
+      Clicking the button below will download the client from mojang.com and run it unmodified in your browser.
+      By clicking it, you agree to the <a href="https://www.minecraft.net/eula">Minecraft EULA</a>.
+    </p>
+    <button>Play!</button>
+    <div class="disclaimer">
+      This is not an official Minecraft product. It is not approved by or associated with Mojang or Microsoft.
+    </div>
+  </div>
   <progress style="display: none"></progress>
-  <button>Run</button>
 `;
 
 export default class MinecraftClient extends HTMLElement {
@@ -61,6 +120,7 @@ export default class MinecraftClient extends HTMLElement {
   #progress;
   #button;
   #display;
+  #intro;
   #isRunning;
 
   constructor() {
@@ -76,13 +136,15 @@ export default class MinecraftClient extends HTMLElement {
     this.#canvas.width = 854;
     this.#canvas.height = 480;
     this.#canvas.tabIndex = -1;
-    this.#canvas.style.visibility = 'hidden';
+    this.#canvas.style.display = 'none';
 
     this.#progress = shadowRoot.querySelector('progress');
     this.#progress.style.display = 'none';
 
-    // CheerpJ needs a div to render to, but we are going to render to own canvas
-    this.#display = shadowRoot.querySelector('div[data-display]');
+    this.#intro = shadowRoot.querySelector('.intro');
+
+    // CheerpJ needs an element to render to, but we are going to render to own canvas
+    this.#display = shadowRoot.querySelector('.display');
     this.#display.setAttribute('style', 'width:100%;height:100%;position:absolute;top:0;left:0px;visibility:hidden;');
     cheerpjCreateDisplay(-1, -1, this.#display);
 
@@ -99,9 +161,9 @@ export default class MinecraftClient extends HTMLElement {
       throw new Error('Already running');
     }
 
-    this.#button.style.display = 'none';
+    this.#intro.style.display = 'none';
+  
     this.#progress.style.display = 'unset';
-
     const jarPath = "/files/client_1.2.5.jar"
     await downloadFileToCheerpJ(
       "https://piston-data.mojang.com/v1/objects/4a2fac7504182a97dcbcd7560c6392d7c8139928/client.jar",
@@ -111,11 +173,12 @@ export default class MinecraftClient extends HTMLElement {
         this.#progress.max = totalBytes;
       }
     );
-    this.#progress.remove();
-    this.#canvas.style.visibility = 'unset';
+    this.#progress.style.display = 'none';
+  
+    this.#canvas.style.display = 'unset';
     const exitCode = await cheerpjRunMain("net.minecraft.client.Minecraft", `/app/lwjgl-2.9.0.jar:/app/lwjgl_util-2.9.0.jar:${jarPath}`)
 
-    this.#canvas.style.visibility = 'hidden';
+    this.#canvas.style.display = 'none';
     this.#isRunning = false;
 
     return exitCode;
