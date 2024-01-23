@@ -176,7 +176,7 @@ export default class MinecraftClient extends HTMLElement {
     this.#progress.style.display = 'none';
   
     this.#canvas.style.display = 'unset';
-    const exitCode = await cheerpjRunMain("net.minecraft.client.Minecraft", `/app/lwjgl-2.9.0.jar:/app/lwjgl_util-2.9.0.jar:${jarPath}`)
+    const exitCode = await cheerpjRunMain("net.minecraft.launchwrapper.Launch", `/app/lwjgl-2.9.0.jar:/app/lwjgl_util-2.9.0.jar:${jarPath}`)
 
     this.#canvas.style.display = 'none';
     this.#isRunning = false;
