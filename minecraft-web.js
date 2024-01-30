@@ -101,10 +101,10 @@ template.innerHTML = `
   <div class="display"></div>
   <div class="intro">
     <p>
-      This is a work-in-progress web port of Minecraft 1.2.5.
+      This is a proof-of-concept demo of Minecraft 1.2.5 running unmodified in the browser.
     </p>
     <p>
-      Clicking the button below will download the client from mojang.com and run it unmodified in your browser.
+      Clicking the button below will download the client from mojang.com.
       By clicking it, you agree to the <a href="https://www.minecraft.net/eula">Minecraft EULA</a>.
     </p>
     <button>Play!</button>
