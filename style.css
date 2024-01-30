@@ -76,3 +76,17 @@ main li {
 .controls > *:hover svg {
   stroke: white;
 }
+
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 854px) {
+  .mobile-only {
+    display: block;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+}
