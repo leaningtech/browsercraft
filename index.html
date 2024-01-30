@@ -3,19 +3,19 @@
   <head>
     <meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<title>Minecraft Web</title>
+		<title>Browsercraft</title>
     <script src="https://cjrtnc.leaningtech.com/3_20231218_321/cj3loader.js"></script>
 		<script defer data-domain="minecraft.cheerpj.com" src="https://plausible.leaningtech.com/js/script.js"></script>
 		<link rel="stylesheet" href="style.css">
 
 		<meta name="description" content="Open-source port of Minecraft to the web. Play Minecraft in your browser!">
-		<meta property="og:title" content="Minecraft Web">
+		<meta property="og:title" content="Browsercraft">
 		<meta property="og:description" content="Open-source port of Minecraft to the web. Play Minecraft in your browser!">
-		<meta property="og:url" content="https://minecraft.cheerpj.com">
+		<meta property="og:url" content="https://browsercraft.cheerpj.com">
 	</head>
   <body>
 		<header>
-			<h1>Minecraft Web</h1>
+			<h1>Browsercraft</h1>
 			<minecraft-client></minecraft-client>
 			<div class="controls">
 				<button id="fullscreen" title="Enter fullscreen">
@@ -33,7 +33,7 @@
 		<main>
 			<h2>What is this</h2>
 			<p>
-				<b>Minecraft Web</b> is an open-source port of Minecraft to the web using <a href="https://cheerpj.com">CheerpJ</a>, a Java runtime for modern browsers.
+				<b>Browsercraft</b> is an open-source port of Minecraft to the web using <a href="https://cheerpj.com">CheerpJ</a>, a Java runtime for modern browsers.
 			</p>
 
 			<h2>What this is not</h2>
@@ -83,9 +83,9 @@
 			
 			const share = document.getElementById("share");
 			const shareData = {
-				title: "Minecraft Web",
+				title: "Browsercraft",
 				text: "Play Minecraft in your browser!",
-				url: "https://minecraft.cheerpj.com",
+				url: "https://browsercraft.cheerpj.com",
 			};
 			if (navigator.canShare?.(shareData)) {
 				share.addEventListener("click", () => navigator.share(shareData));
