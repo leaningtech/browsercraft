@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" style="width:100%;height:100%;overflow:hidden">
+  <head>
+    <meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Browsercraft</title>
+		<script src="https://cjrtnc.leaningtech.com/3.0/cj3loader.js"></script>
+		<script defer data-domain="browsercraft.cheerpj.com" src="https://plausible.leaningtech.com/js/script.js"></script>
+    <link rel="stylesheet" href="style.css">
+	</head>
+  <body>
+		<minecraft-client style="width: 100%; height: 100%"></minecraft-client>
+    <script type="module">
+			import MinecraftClient from "./minecraft-web.js";
+			await cheerpjInit({
+				version: 8,
+				javaProperties: ["java.library.path=/app/cheerpj-natives/natives", "org.lwjgl.util.NoChecks=true"],
+			});
+			MinecraftClient.register();
+    </script>
+  </body>
+</html>
