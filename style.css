@@ -53,11 +53,11 @@ main li {
   }
 }
 
-.controls {
+.pagecontrols {
   margin: 0.5rem 0;
 }
 
-.controls > * {
+.pagecontrols > * {
   appearance: none;
   background: transparent;
   border: 0;
@@ -69,11 +69,11 @@ main li {
   margin-right: 0.5rem;
 }
 
-.controls svg {
+.pagecontrols svg {
   stroke: #c6b8b4;
 }
 
-.controls > *:hover svg {
+.pagecontrols > *:hover svg {
   stroke: white;
 }
 
