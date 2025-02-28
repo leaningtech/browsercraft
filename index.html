@@ -17,7 +17,24 @@
 		<header>
 			<h1>Browsercraft</h1>
 			<div class="desktop-only">
-				<minecraft-client></minecraft-client>
+				<div class="container">
+					<canvas width="854" height="480" tabindex="-1"></canvas>
+					<div class="display"></div>
+					<div class="intro">
+						<p>
+							This is a proof-of-concept demo of Minecraft 1.2.5 running unmodified in the browser.
+						</p>
+						<p>
+							Clicking the button below will download the client from mojang.com.
+							By clicking it, you agree to the <a href="https://www.minecraft.net/eula">Minecraft EULA</a>.
+						</p>
+						<button>Play!</button>
+						<div class="disclaimer">
+							This is not an official Minecraft product. It is not approved by or associated with Mojang or Microsoft.
+						</div>
+					</div>
+					<progress style="display: none"></progress>
+				</div>
 				<div class="pagecontrols">
 					<button id="fullscreen" title="Enter fullscreen">
 						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-maximize"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
@@ -80,7 +97,7 @@
 				version: 8,
 				javaProperties: ["java.library.path=/app/cheerpj-natives/natives", "org.lwjgl.util.NoChecks=true"],
 			});
-			MinecraftClient.register();
+			const mc = new MinecraftClient();
 
 			const client = document.querySelector("minecraft-client");
 	
@@ -97,6 +114,6 @@
 			} else {
 				share.remove();
 			}
-    </script>
+		</script>
   </body>
 </html>

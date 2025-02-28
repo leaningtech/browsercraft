@@ -90,3 +90,59 @@ main li {
     display: none;
   }
 }
+
+.container {
+  display: inline-block;
+  aspect-ratio: 4 / 3;
+
+  background: black;
+  color: #eee;
+  color-scheme: dark;
+
+  width: 800px;
+  height: 500px;
+}
+
+canvas {
+  width: inherit;
+  height: inherit;
+}
+
+.display {
+  width: 800px;
+  height: 500px;
+  position: relative;
+  inset: 0;
+  display: none;
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.intro > p {
+  max-width: 60ch;
+}
+
+.disclaimer {
+  font-size: 0.8em;
+  opacity: 0.5;
+}
+
+.intro > button {
+  padding: 0.5em 1em;
+  margin: 2em;
+}
+
+.container > progress {
+  width: calc(100% - 2em);
+  margin: 1em;
+}
+
+.container *:focus {
+  outline: none;
+}
