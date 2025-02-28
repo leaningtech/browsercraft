@@ -92,6 +92,16 @@
 		</main>
 
 		<script type="module">
+			const share = document.getElementById("share");
+			const shareData = {
+				title: "Browsercraft",
+				text: "Unmodified Minecraft running in the browser using CheerpJ. Play Minecraft in your browser!",
+				url: "https://browsercraft.cheerpj.com",
+			};
+			if (navigator.canShare?.(shareData)) {
+				share.addEventListener("click", () => navigator.share(shareData));
+				share.style.display = 'unset';
+			}
 			import MinecraftClient from "./minecraft-web.js";
 			await cheerpjInit({
 				version: 8,
@@ -102,18 +112,6 @@
 			const client = document.querySelector("minecraft-client");
 	
 			document.getElementById("fullscreen").addEventListener("click", () => client.requestFullscreen());
-			
-			const share = document.getElementById("share");
-			const shareData = {
-				title: "Browsercraft",
-				text: "Unmodified Minecraft running in the browser using CheerpJ. Play Minecraft in your browser!",
-				url: "https://browsercraft.cheerpj.com",
-			};
-			if (navigator.canShare?.(shareData)) {
-				share.addEventListener("click", () => navigator.share(shareData));
-			} else {
-				share.remove();
-			}
 		</script>
   </body>
 </html>

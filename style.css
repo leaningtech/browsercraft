@@ -77,6 +77,10 @@ main li {
   stroke: white;
 }
 
+.pagecontrols > #share {
+  display: none;
+}
+
 .mobile-only {
   display: none;
 }
