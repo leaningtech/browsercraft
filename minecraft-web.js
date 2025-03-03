@@ -46,11 +46,6 @@ export default class MinecraftClient {
     this.#button = document.querySelector('button');
     this.#button.addEventListener('click', () => this.run());
 
-    this.#canvas = document.querySelector('canvas');
-    this.#canvas.width = 854;
-    this.#canvas.height = 480;
-    this.#canvas.tabIndex = -1;
-    this.#canvas.style.display = 'none';
     this.#progress = document.querySelector('progress');
     this.#progress.style.display = 'none';
 
@@ -58,7 +53,6 @@ export default class MinecraftClient {
 
     // CheerpJ needs an element to render to
     this.#display = document.querySelector('.display');
-    this.#display.setAttribute('style', 'width:100%;height:100%;position:absolute;top:0;left:0px;visibility:hidden;');
     cheerpjCreateDisplay(-1, -1, this.#display);
 
     this.#isRunning = false;
@@ -84,12 +78,10 @@ export default class MinecraftClient {
       }
     );
     this.#progress.style.display = 'none';
+    this.#display.style.display = 'unset';
   
-    this.#canvas.style.display = 'unset';
-    window.lwjglCanvasElement = this.#canvas;
-    const exitCode = await cheerpjRunMain("net.minecraft.client.Minecraft", `/app/lwjgl-2.9.0.jar:/app/lwjgl_util-2.9.0.jar:${jarPath}`)
+    const exitCode = await cheerpjRunMain("net.minecraft.client.Minecraft", `/app/lwjgl-2.9.3.jar:/app/lwjgl_util-2.9.3.jar:${jarPath}`)
 
-    this.#canvas.style.display = 'none';
     this.#isRunning = false;
 
     return exitCode;
