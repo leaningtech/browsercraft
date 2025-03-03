@@ -1,0 +1,32 @@
+version: 2.1
+
+jobs:
+  deploy:
+    docker:
+      - image: cimg/node:22.9
+    resource_class: medium
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "86:3b:c9:a6:d1:b9:a8:dc:0e:00:db:99:8d:19:c4:3e"
+      - run:
+          name: Add known hosts
+          command: |
+            mkdir -p ~/.ssh
+            echo $GH_HOST >> ~/.ssh/known_hosts
+      - run:
+          name: Clone Browsercraft
+          command: |
+            git clone --branch $CIRCLE_BRANCH --single-branch git@github.com:leaningtech/browsercraft.git
+      - run:
+          name: Deploy Browsercraft
+          command: |
+            cd browsercraft
+            rsync -avz -e "ssh -p ${SSH_PORT}" 404.html embed.html fonts index.html libraries lwjgl-2.9.3.jar lwjgl_util-2.9.3.jar minecraft-web.js style.css leaningtech@${SSH_HOST}:/srv/web/browsercraft/
+
+workflows:
+  deploy:
+    when:
+      equal: [ << pipeline.trigger_source >>, "api" ]
+    jobs:
+      - deploy
