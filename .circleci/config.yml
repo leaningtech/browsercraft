@@ -15,6 +15,10 @@ jobs:
             mkdir -p ~/.ssh
             echo $GH_HOST >> ~/.ssh/known_hosts
       - run:
+          name: Install rsync
+          command: |
+            sudo apt-get update && sudo apt-get install -y rsync
+      - run:
           name: Clone Browsercraft
           command: |
             git clone --branch $CIRCLE_BRANCH --single-branch git@github.com:leaningtech/browsercraft.git
