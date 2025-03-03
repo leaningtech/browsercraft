@@ -25,10 +25,10 @@ async function downloadFileToCheerpJ(url, destPath, progressCallback) {
 
 	// Write to CheerpJ filesystem
 	return new Promise((resolve, reject) => {
-		cheerpOSOpen(cjFDs, destPath, "w", fd => {
-			cheerpOSWrite(cjFDs, fd, bytes, 0, bytes.length, w => {
-				cheerpOSClose(cjFDs, fd);
-				resolve();
+		var fds = [];
+		cheerpOSOpen(fds, destPath, "w", fd => {
+			cheerpOSWrite(fds, fd, bytes, 0, bytes.length, w => {
+				cheerpOSClose(fds, fd, resolve);
 			});
 		});
 	});
