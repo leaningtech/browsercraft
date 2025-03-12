@@ -63,7 +63,8 @@ export default class MinecraftClient {
     if (this.#isRunning) {
       throw new Error('Already running');
     }
-    plausible("Play");
+    if(self.plausible)
+      self.plausible("Play");
 
     this.#intro.style.display = 'none';
   
