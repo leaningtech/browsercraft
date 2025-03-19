@@ -81,20 +81,6 @@ main li {
   display: none;
 }
 
-.mobile-only {
-  display: none;
-}
-
-@media (max-width: 854px) {
-  .mobile-only {
-    display: block;
-  }
-
-  .desktop-only {
-    display: none;
-  }
-}
-
 .container {
   display: inline-block;
   aspect-ratio: 4 / 3;
