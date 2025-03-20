@@ -1,4 +1,4 @@
-var r = await fetch("/libraries/lwjgl2.wasm");
+var r = await fetch("/libraries/liblwjgl.so");
 var buf = await r.arrayBuffer();
 export default
 {
