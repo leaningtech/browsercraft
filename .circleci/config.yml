@@ -14,7 +14,7 @@ jobs:
           command: |
             mkdir -p ~/.ssh
             echo $GH_HOST >> ~/.ssh/known_hosts
-            echo $RPM_HOST >> ~/.ssh/known_hosts
+            echo $HAVANA_HOST >> ~/.ssh/known_hosts
       - run:
           name: Install rsync
           command: |
@@ -27,7 +27,7 @@ jobs:
           name: Deploy Browsercraft
           command: |
             cd browsercraft
-            rsync -avz -e "ssh -p ${SSH_PORT}" 404.html embed.html fonts index.html libraries lwjgl-2.9.3.jar lwjgl_util-2.9.3.jar minecraft-web.js style.css leaningtech@${SSH_HOST}:/srv/web/browsercraft/
+            rsync -avz --chown circleci:runtimes 404.html embed.html fonts index.html libraries lwjgl-2.9.3.jar lwjgl_util-2.9.3.jar minecraft-web.js style.css circleci@havana.leaningtech.com:browsercraft/
 
 workflows:
   deploy:
