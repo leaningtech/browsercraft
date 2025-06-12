@@ -81,7 +81,7 @@ export default class MinecraftClient {
     this.#progress.style.display = 'none';
     this.#display.style.display = 'unset';
   
-    const exitCode = await cheerpjRunMain("net.minecraft.client.Minecraft", `/app/lwjgl-2.9.3.jar:/app/lwjgl_util-2.9.3.jar:${jarPath}`)
+    const exitCode = await cheerpjRunMain("net.minecraft.client.Minecraft", `/app/lwjgl/lwjgl-2.9.3.jar:/app/lwjgl/lwjgl_util-2.9.3.jar:${jarPath}`)
 
     this.#isRunning = false;
 

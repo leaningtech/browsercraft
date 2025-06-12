@@ -1,3 +1,6 @@
+/* @import 'tailwindcss'; */
+/* @plugin '@tailwindcss/forms'; */
+
 html, body {
   height: 100%;
   margin: 0;
