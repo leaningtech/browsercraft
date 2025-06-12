@@ -1,103 +1,9 @@
 <script lang="ts">
+	import MinecraftClient from "$lib/minecraft-web";
 	import { onMount } from "svelte";
+	import '../app.css';
 
-	/**
- * Downloads a file from a url and writes it to the CheerpJ filesystem.
- * @param {string} url
- * @param {string} destPath
- * @param {(downloadedBytes: number, totalBytes: number) => void} [progressCallback]
- * @returns {Promise<void>}
- */
-	async function downloadFileToCheerpJ(url, destPath, progressCallback) {
-		const response = await fetch(url);
-		const reader = response.body.getReader();
-		const contentLength = +response.headers.get('Content-Length');
-
-		const bytes = new Uint8Array(contentLength);
-		progressCallback?.(0, contentLength);
-
-		let pos = 0;
-		while (true) {
-			const { done, value } = await reader.read();
-			if (done)
-				break;
-			bytes.set(value, pos);
-			pos += value.length;
-			progressCallback?.(pos, contentLength);
-		}
-
-		// Write to CheerpJ filesystem
-		return new Promise((resolve, reject) => {
-			var fds = [];
-			cheerpOSOpen(fds, destPath, "w", fd => {
-				cheerpOSWrite(fds, fd, bytes, 0, bytes.length, w => {
-					cheerpOSClose(fds, fd, resolve);
-				});
-			});
-		});
-	}
-
-	class MinecraftClient {
-		#canvas;
-		#progress;
-		#button;
-		#display;
-		#intro;
-		#isRunning;
-
-		constructor() {
-			this.#button = document.querySelector('button');
-			this.#button.addEventListener('click', () => this.run());
-
-			this.#progress = document.querySelector('progress');
-			this.#progress.style.display = 'none';
-
-			this.#intro = document.querySelector('.intro');
-
-			// CheerpJ needs an element to render to
-			this.#display = document.querySelector('.display');
-			cheerpjCreateDisplay(-1, -1, this.#display);
-
-			this.#isRunning = false;
-		}
-
-		/** @returns {Promise<number>} Exit code */
-		async run() {
-			if (this.#isRunning) {
-				throw new Error('Already running');
-			}
-			if(self.plausible)
-				self.plausible("Play");
-
-			this.#intro.style.display = 'none';
-		
-			this.#progress.style.display = 'unset';
-			const jarPath = "/files/client_1.2.5.jar"
-			await downloadFileToCheerpJ(
-				"https://piston-data.mojang.com/v1/objects/4a2fac7504182a97dcbcd7560c6392d7c8139928/client.jar",
-				jarPath,
-				(downloadedBytes, totalBytes) => {
-					this.#progress.value = downloadedBytes;
-					this.#progress.max = totalBytes;
-				}
-			);
-			this.#progress.style.display = 'none';
-			this.#display.style.display = 'unset';
-		
-			const exitCode = await cheerpjRunMain("net.minecraft.client.Minecraft", `/app/static/libraries/lwjgl/lwjgl-2.9.3.jar:/app/static/libraries/lwjgl/lwjgl_util-2.9.3.jar:${jarPath}`)
-
-			this.#isRunning = false;
-
-			return exitCode;
-		}
-
-		/** @returns {boolean} */
-		get isRunning() {
-			return this.#isRunning;
-		}
-	}
-
-	onMount(() => {
+	onMount(async () => {
 		const share = document.getElementById("share");
 		const shareData = {
 			title: "Browsercraft",
@@ -108,10 +14,10 @@
 			share.addEventListener("click", () => navigator.share(shareData));
 			share.style.display = 'unset';
 		}
-		cheerpjInit({
+		await cheerpjInit({
 			version: 8,
-			javaProperties: ["java.library.path=/app/static/libraries/"],
-			libraries: {"libGL.so.1": "/app/static/libraries/gl4es.wasm"},
+			javaProperties: ["java.library.path=/app/lwjgl/"],
+			libraries: {"libGL.so.1": "/app/lwjgl/gl4es.wasm"},
 			enableX11:true,
 			preloadResources:{"/lt/8/jre/lib/rt.jar":[0,131072,1310720,1572864,4456448,4849664,5111808,5505024,7995392,8126464,9699328,9830400,9961472,11534336,11665408,12189696,12320768,12582912,13238272,13369344,15073280,15335424,15466496,15597568,15990784,16121856,16252928,16384000,16777216,16908288,17039360,17563648,17694720,17825792,17956864,18087936,18219008,18612224,18743296,18874368,19005440,19136512,19398656,19791872,20054016,20709376,20840448,21757952,21889024,26869760],"/lt/etc/users":[0,131072],"/lt/etc/localtime":[],"/lt/8/jre/lib/cheerpj-awt.jar":[0,131072],"/lt/8/lib/ext/meta-index":[0,131072],"/lt/8/lib/ext":[],"/lt/8/lib/ext/index.list":[],"/lt/8/lib/ext/localedata.jar":[],"/lt/8/jre/lib/jsse.jar":[0,131072,786432,917504],"/lt/8/jre/lib/jce.jar":[0,131072],"/lt/8/jre/lib/charsets.jar":[0,131072,1703936,1835008],"/lt/8/jre/lib/resources.jar":[0,131072,917504,1179648],"/lt/8/jre/lib/javaws.jar":[0,131072,1441792,1703936],"/lt/8/lib/ext/sunjce_provider.jar":[],"/lt/8/lib/security/java.security":[0,131072],"/lt/8/jre/lib/meta-index":[0,131072],"/lt/8/jre/lib":[],"/lt/8/lib/accessibility.properties":[],"/lt/8/lib/fonts/LucidaSansRegular.ttf":[],"/lt/8/lib/currency.data":[0,131072],"/lt/8/lib/currency.properties":[],"/lt/libraries/libGLESv2.so.1":[0,262144],"/lt/libraries/libEGL.so.1":[0,262144],"/lt/8/lib/fonts/badfonts.txt":[],"/lt/8/lib/fonts":[],"/lt/etc/hosts":[],"/lt/etc/resolv.conf":[0,131072],"/lt/8/lib/fonts/fallback":[],"/lt/fc/fonts/fonts.conf":[0,131072],"/lt/fc/ttf":[],"/lt/fc/cache/e21edda6a7db77f35ca341e0c3cb2a22-le32d8.cache-7":[0,131072],"/lt/fc/ttf/LiberationSans-Regular.ttf":[0,131072,262144,393216],"/lt/8/lib/jaxp.properties":[],"/lt/etc/timezone":[],"/lt/8/lib/tzdb.dat":[0,131072]}
 		});
