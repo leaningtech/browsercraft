@@ -2,22 +2,30 @@
 /* @plugin '@tailwindcss/forms'; */
 
 html, body {
-  height: 100%;
+  height: 98vh;
   margin: 0;
   padding: 0;
+  /* overflow: hidden; */
 
   font-family: system-ui, sans-serif;
 }
 
 @font-face {
   font-family: "Minecrafter";
-  src: url("fonts/minecrafter/Minecrafter.Reg.woff2"), sans-serif;
+  src: url("/fonts/minecrafter/Minecrafter.Reg.woff2"), sans-serif;
 }
 
 header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   background: #171615;
   color: white;
-  padding: 1rem;
+  margin: 0;
+  padding: 0;
+  /* padding: 1rem; */
+  width: 100%;
+  height: 10%;
 
   display: flex;
   flex-direction: column;
@@ -25,20 +33,44 @@ header {
   align-items: center;
 }
 
-header h1 {
-  color: #c6b8b4;
-  font: 48px Minecrafter;
+main {
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  /* padding: 5%; */
+  /* margin: 0 auto; */
+  /* padding: 1rem;
+  max-width: 60ch; */
+  width: 100%;
+  height: 80%;
+  /* box-sizing: border-box; */
+  /* line-height: 1.4; */
+}
+
+main h1 {
+  color: #93510f;
+  font: 52px Minecrafter;
   transform: perspective(24px) translateZ(0) rotate3d(1, 0, 0, 2deg);
   text-shadow: 0px 5px 4px black;
 }
 
-main {
-  margin: 0 auto;
-  padding: 1rem;
-  max-width: 60ch;
-  width: 100%;
+footer{
+  /* display: flex;
+  flex-direction: column; */
+	/* align-items: center;
+  justify-content: center; */
+	width: 100%;
+  height: 10%;
   box-sizing: border-box;
-  line-height: 1.4;
+  /* padding: 5%; */
+  /* margin: 0;
+  padding: 0; */
+	padding-bottom: 2vh;
+	/* bottom: 0; */
+	font-family: system-ui;
+	font-weight: 300;
 }
 
 main h2 {
@@ -77,7 +109,7 @@ main li {
 }
 
 .pagecontrols > *:hover svg {
-  stroke: white;
+  stroke: black;
 }
 
 .pagecontrols > #share {
@@ -94,11 +126,6 @@ main li {
 
   width: 800px;
   height: 500px;
-}
-
-canvas {
-  width: inherit;
-  height: inherit;
 }
 
 .display {
@@ -138,4 +165,52 @@ canvas {
 
 .container *:focus {
   outline: none;
+}
+
+a {
+	color: #62605d;
+	text-decoration: none;
+}
+
+a:hover {
+	cursor: pointer;
+	color: #ff8d1c;
+}
+
+div#footerLinks{
+	max-width: 50%;
+	display: flex;
+	justify-content:space-evenly;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 25%;
+	padding-right: 25%;
+	text-align: center;
+	position: relative;
+	font-size: 14px;
+}
+
+div#footerLogo{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+img#ltlogo{
+	width: 1.5em;
+	height: 1.5em;
+	display: inline-block;
+}
+
+p#footerText{
+	margin-left: 12px;
+	font-size: 14px;
+	color: #62605d;
+	display: inline-block;
+}
+
+hr.solid {
+	max-width: 70%;
+	/* border-top: 1px solid #454442;
+	border-bottom: none; */
 }
