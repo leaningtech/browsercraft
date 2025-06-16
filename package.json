@@ -26,7 +26,9 @@
 		"svelte-check": "^4.0.0",
 		"tailwindcss": "^4.0.0",
 		"typescript": "^5.0.0",
-		"vite": "^6.2.6"
+		"vite": "^6.2.6",
+		"labs": "git@github.com:leaningtech/labs.git",
+		"@oddbird/popover-polyfill": "^0.4.4"
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [

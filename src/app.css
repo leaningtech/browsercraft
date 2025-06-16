@@ -2,169 +2,172 @@
 /* @plugin '@tailwindcss/forms'; */
 
 html, body {
-  height: 98vh;
-  margin: 0;
-  padding: 0;
-  /* overflow: hidden; */
+	height: 98vh;
+	margin: 0;
+	padding: 0;
+	/* overflow: hidden; */
 
-  font-family: system-ui, sans-serif;
+	font-family: system-ui, sans-serif;
 }
 
 @font-face {
-  font-family: "Minecrafter";
-  src: url("/fonts/minecrafter/Minecrafter.Reg.woff2"), sans-serif;
+	font-family: "Minecrafter";
+	src: url("/fonts/minecrafter/Minecrafter.Reg.woff2"), sans-serif;
 }
 
 header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background: #171615;
-  color: white;
-  margin: 0;
-  padding: 0;
-  /* padding: 1rem; */
-  width: 100%;
-  height: 10%;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+	/* display: block; */
+	/* flex-direction: row; */
+	/* align-items: center; */
+	background: #171615;
+	color: white;
+	/* margin: 0;
+	padding: 0; */
+	/* padding: 1rem; */
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	height: 5%;
+	/* display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center; */
 }
 
 main {
-  display: flex;
-  box-sizing: border-box;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  /* padding: 5%; */
-  /* margin: 0 auto; */
-  /* padding: 1rem;
-  max-width: 60ch; */
-  width: 100%;
-  height: 80%;
-  /* box-sizing: border-box; */
-  /* line-height: 1.4; */
+	display: flex;
+	box-sizing: border-box;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	/* padding: 5%; */
+	margin: 0;
+	padding: 0;
+	/* max-width: 60ch; */
+	width: 100%;
+	height: 85%;
+	/* box-sizing: border-box; */
+	/* line-height: 1.4; */
 }
 
 main h1 {
-  color: #93510f;
-  font: 52px Minecrafter;
-  transform: perspective(24px) translateZ(0) rotate3d(1, 0, 0, 2deg);
-  text-shadow: 0px 5px 4px black;
+	color: #93510f;
+	font: 52px Minecrafter;
+	transform: perspective(24px) translateZ(0) rotate3d(1, 0, 0, 2deg);
+	text-shadow: 0px 5px 4px black;
 }
 
 footer{
-  /* display: flex;
-  flex-direction: column; */
+	/* display: flex;
+	flex-direction: column; */
 	/* align-items: center;
-  justify-content: center; */
+	justify-content: center; */
 	width: 100%;
-  height: 10%;
-  box-sizing: border-box;
-  /* padding: 5%; */
-  /* margin: 0;
-  padding: 0; */
-	padding-bottom: 2vh;
+	height: 10%;
+	box-sizing: border-box;
+	/* padding: 5%; */
+	/* margin: 0;
+	padding: 0; */
+	margin: 0;
+	padding: 0;
+	/* padding-bottom: 10vh; */
 	/* bottom: 0; */
 	font-family: system-ui;
 	font-weight: 300;
 }
 
-main h2 {
-  font-size: 1.5rem;
-  margin: 1rem 0 0.5rem;
+/* main h2 {
+	font-size: 1.5rem;
+	margin: 1rem 0 0.5rem;
 }
 
 main li {
-  margin: 0.5rem 0;
-}
+	margin: 0.5rem 0;
+} */
 
 @media (max-width: 900px) {
-  minecraft-client {
-    width: 100%;
-  }
+	minecraft-client {
+		width: 100%;
+	}
 }
 
 .pagecontrols {
-  margin: 0.5rem 0;
+	margin: 0.5rem 0;
 }
 
 .pagecontrols > * {
-  appearance: none;
-  background: transparent;
-  border: 0;
-  cursor: pointer;
+	appearance: none;
+	background: transparent;
+	border: 0;
+	cursor: pointer;
 
-  width: 24px;
-  height: 24px;
+	width: 24px;
+	height: 24px;
 
-  margin-right: 0.5rem;
+	margin-right: 0.5rem;
 }
 
 .pagecontrols svg {
-  stroke: #c6b8b4;
+	stroke: #c6b8b4;
 }
 
 .pagecontrols > *:hover svg {
-  stroke: black;
+	stroke: black;
 }
 
 .pagecontrols > #share {
-  display: none;
+	display: none;
 }
 
 .container {
-  display: inline-block;
-  aspect-ratio: 4 / 3;
+	display: inline-block;
+	aspect-ratio: 4 / 3;
 
-  background: black;
-  color: #eee;
-  color-scheme: dark;
+	background: black;
+	color: #eee;
+	color-scheme: dark;
 
-  width: 800px;
-  height: 500px;
+	width: 800px;
+	height: 500px;
 }
 
 .display {
-  width: 800px;
-  height: 500px;
-  position: relative;
-  inset: 0;
-  display: none;
+	width: 800px;
+	height: 500px;
+	position: relative;
+	inset: 0;
+	display: none;
 }
 
 .intro {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
 }
 
 .intro > p {
-  max-width: 60ch;
+	max-width: 60ch;
 }
 
 .disclaimer {
-  font-size: 0.8em;
-  opacity: 0.5;
+	font-size: 0.8em;
+	opacity: 0.5;
 }
 
 .intro > button {
-  padding: 0.5em 1em;
-  margin: 2em;
+	padding: 0.5em 1em;
+	margin: 2em;
 }
 
 .container > progress {
-  width: calc(100% - 2em);
-  margin: 1em;
+	width: calc(100% - 2em);
+	margin: 1em;
 }
 
 .container *:focus {
-  outline: none;
+	outline: none;
 }
 
 a {
