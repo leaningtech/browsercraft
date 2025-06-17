@@ -91,6 +91,7 @@ main li {
 
   width: 800px;
   height: 500px;
+  position: relative;
 }
 
 canvas {
@@ -116,6 +117,44 @@ canvas {
 
 .intro > p {
   max-width: 60ch;
+}
+
+.timeout {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.timeout > p {
+  max-width: 60ch;
+}
+
+.timeout-timer {
+  position: absolute;
+  font-size: 4rem;
+  margin: 0;
+  top: 0;
+  right: 0;
+  display: none;
+}
+
+.timeout-timer > p {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-right: 1rem;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8),
+               -1px -1px 2px rgba(0, 0, 0, 0.8),
+               1px -1px 2px rgba(0, 0, 0, 0.8),
+               -1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 .disclaimer {

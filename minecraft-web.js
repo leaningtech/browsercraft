@@ -35,11 +35,15 @@ async function downloadFileToCheerpJ(url, destPath, progressCallback) {
 }
 
 export default class MinecraftClient {
-  #canvas;
   #progress;
   #button;
   #display;
   #intro;
+  #timeout;
+  #timer;
+  #timerText
+  #timeLeft;
+  #timerInterval;
   #isRunning;
 
   constructor() {
@@ -51,11 +55,19 @@ export default class MinecraftClient {
 
     this.#intro = document.querySelector('.intro');
 
+    this.#timeout = document.querySelector('.timeout');
+    this.#timer = document.querySelector('.timeout-timer');
+    this.#timerText = document.getElementById('timer');
+
     // CheerpJ needs an element to render to
     this.#display = document.querySelector('.display');
     cheerpjCreateDisplay(-1, -1, this.#display);
 
     this.#isRunning = false;
+
+    // The demo is limited to 3 minutes, and not intended to replace the full game
+    this.#timeLeft = 180;
+    this.updateTimer();
   }
 
   /** @returns {Promise<number>} Exit code */
@@ -80,6 +92,9 @@ export default class MinecraftClient {
     );
     this.#progress.style.display = 'none';
     this.#display.style.display = 'unset';
+
+    this.#timer.style.display = 'unset';
+    this.#timerInterval = setInterval(() => this.timerTick(), 1000);
   
     const exitCode = await cheerpjRunMain("net.minecraft.client.Minecraft", `/app/lwjgl-2.9.3.jar:/app/lwjgl_util-2.9.3.jar:${jarPath}`)
 
@@ -91,5 +106,25 @@ export default class MinecraftClient {
   /** @returns {boolean} */
   get isRunning() {
     return this.#isRunning;
+  }
+
+  updateTimer() {
+    const minutes = Math.floor(this.#timeLeft / 60);
+    const seconds = this.#timeLeft % 60;
+    this.#timerText.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  timerTick() {
+    if(this.#timeLeft == 0)
+    {
+	clearInterval(this.#timerInterval);
+	this.#timer.style.display = 'none';
+        this.#timeout.style.display = 'flex';
+	document.exitPointerLock();
+	document.activeElement.blur();
+	return;
+    }
+    this.#timeLeft--;
+    this.updateTimer();
   }
 }
