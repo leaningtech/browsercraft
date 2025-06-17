@@ -6,8 +6,6 @@ html, body {
 	margin: 0;
 	padding: 0;
 	background: #d6d6d6;
-	/* overflow: hidden; */
-
 	font-family: system-ui, sans-serif;
 }
 
@@ -17,22 +15,12 @@ html, body {
 }
 
 header {
-	/* display: block; */
-	/* flex-direction: row; */
-	/* align-items: center; */
 	background: #171615;
 	color: white;
-	/* margin: 0;
-	padding: 0; */
-	/* padding: 1rem; */
 	width: 100%;
 	margin: 0;
 	padding: 0;
 	height: 5%;
-	/* display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center; */
 }
 
 main {
@@ -41,14 +29,10 @@ main {
 	flex-direction: column;
 	justify-content: flex-start;
 	align-items: center;
-	/* padding: 5%; */
 	margin: 0;
 	padding: 0;
-	/* max-width: 60ch; */
 	width: 100%;
 	height: 85%;
-	/* box-sizing: border-box; */
-	/* line-height: 1.4; */
 }
 
 main h1 {
@@ -59,32 +43,14 @@ main h1 {
 }
 
 footer{
-	/* display: flex;
-	flex-direction: column; */
-	/* align-items: center;
-	justify-content: center; */
 	width: 100%;
 	height: 10%;
 	box-sizing: border-box;
-	/* padding: 5%; */
-	/* margin: 0;
-	padding: 0; */
 	margin: 0;
 	padding: 0;
-	/* padding-bottom: 10vh; */
-	/* bottom: 0; */
 	font-family: system-ui;
 	font-weight: 300;
 }
-
-/* main h2 {
-	font-size: 1.5rem;
-	margin: 1rem 0 0.5rem;
-}
-
-main li {
-	margin: 0.5rem 0;
-} */
 
 @media (max-width: 900px) {
 	minecraft-client {
@@ -187,6 +153,4 @@ p#footerText{
 
 hr.solid {
 	max-width: 70%;
-	/* border-top: 1px solid #454442;
-	border-bottom: none; */
 }
