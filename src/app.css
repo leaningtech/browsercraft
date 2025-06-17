@@ -61,6 +61,7 @@ footer{
 .container {
 	display: inline-block;
 	aspect-ratio: 4 / 3;
+	position: relative;
 
 	background: black;
 	color: #eee;
@@ -153,4 +154,40 @@ p#footerText{
 
 hr.solid {
 	max-width: 70%;
+}
+
+.timeout {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.8);
+}
+
+.timeout > p {
+	max-width: 60ch;
+}
+
+.timeout-timer {
+	position: absolute;
+	font-size: 3rem;
+	margin: 0;
+	top: 2%;
+	right: 0;
+}
+
+.timeout-timer > p {
+	margin-top: 0;
+	margin-bottom: 0;
+	margin-right: 1rem;
+	color: white;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8),
+							-1px -1px 2px rgba(0, 0, 0, 0.8),
+								1px -1px 2px rgba(0, 0, 0, 0.8),
+							-1px 1px 2px rgba(0, 0, 0, 0.8);
 }

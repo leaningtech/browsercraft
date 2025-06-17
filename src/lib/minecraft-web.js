@@ -41,7 +41,6 @@ export default class MinecraftClient {
 	#isRunning;
 
 	constructor() {
-
 		this.#progress = document.getElementById('progressBar');
 		this.#progress.style.display = 'none';
 
@@ -49,12 +48,10 @@ export default class MinecraftClient {
 
 		// CheerpJ needs an element to render to
 		this.#display = document.getElementById('display');
-		cheerpjCreateDisplay(-1, -1, this.#display);
 
 		this.#isRunning = false;
 	}
 
-	/** @returns {Promise<number>} Exit code */
 	async run() {
 		if (this.#isRunning) {
 			throw new Error('Already running');
@@ -76,16 +73,9 @@ export default class MinecraftClient {
 		);
 		this.#progress.style.display = 'none';
 		this.#display.style.display = 'unset';
-	
-		const exitCode = await cheerpjRunMain("net.minecraft.client.Minecraft", `/app/lwjgl/lwjgl-2.9.3.jar:/app/lwjgl/lwjgl_util-2.9.3.jar:${jarPath}`)
+
+		cheerpjRunMain("net.minecraft.client.Minecraft", `/app/lwjgl/lwjgl-2.9.3.jar:/app/lwjgl/lwjgl_util-2.9.3.jar:${jarPath}`)
 
 		this.#isRunning = false;
-
-		return exitCode;
-	}
-
-	/** @returns {boolean} */
-	get isRunning() {
-		return this.#isRunning;
 	}
 }
