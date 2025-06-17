@@ -11,7 +11,7 @@ async function downloadFileToCheerpJ(url, destPath, progressCallback) {
 	const contentLength = +response.headers.get('Content-Length');
 
 	const bytes = new Uint8Array(contentLength);
-  progressCallback?.(0, contentLength);
+	progressCallback?.(0, contentLength);
 
 	let pos = 0;
 	while (true) {
@@ -20,7 +20,7 @@ async function downloadFileToCheerpJ(url, destPath, progressCallback) {
 			break;
 		bytes.set(value, pos);
 		pos += value.length;
-    progressCallback?.(pos, contentLength);
+		progressCallback?.(pos, contentLength);
 	}
 
 	// Write to CheerpJ filesystem
@@ -35,61 +35,57 @@ async function downloadFileToCheerpJ(url, destPath, progressCallback) {
 }
 
 export default class MinecraftClient {
-  #canvas;
-  #progress;
-  #button;
-  #display;
-  #intro;
-  #isRunning;
+	#progress;
+	#display;
+	#intro;
+	#isRunning;
 
-  constructor() {
-    this.#button = document.querySelector('button');
-    this.#button.addEventListener('click', () => this.run());
+	constructor() {
 
-    this.#progress = document.querySelector('progress');
-    this.#progress.style.display = 'none';
+		this.#progress = document.getElementById('progressBar');
+		this.#progress.style.display = 'none';
 
-    this.#intro = document.querySelector('.intro');
+		this.#intro = document.getElementById('introBrowsercraft');
 
-    // CheerpJ needs an element to render to
-    this.#display = document.querySelector('.display');
-    cheerpjCreateDisplay(-1, -1, this.#display);
+		// CheerpJ needs an element to render to
+		this.#display = document.getElementById('display');
+		cheerpjCreateDisplay(-1, -1, this.#display);
 
-    this.#isRunning = false;
-  }
+		this.#isRunning = false;
+	}
 
-  /** @returns {Promise<number>} Exit code */
-  async run() {
-    if (this.#isRunning) {
-      throw new Error('Already running');
-    }
-    if(self.plausible)
-      self.plausible("Play");
+	/** @returns {Promise<number>} Exit code */
+	async run() {
+		if (this.#isRunning) {
+			throw new Error('Already running');
+		}
+		if(self.plausible)
+			self.plausible("Play");
 
-    this.#intro.style.display = 'none';
-  
-    this.#progress.style.display = 'unset';
-    const jarPath = "/files/client_1.2.5.jar"
-    await downloadFileToCheerpJ(
-      "https://piston-data.mojang.com/v1/objects/4a2fac7504182a97dcbcd7560c6392d7c8139928/client.jar",
-      jarPath,
-      (downloadedBytes, totalBytes) => {
-        this.#progress.value = downloadedBytes;
-        this.#progress.max = totalBytes;
-      }
-    );
-    this.#progress.style.display = 'none';
-    this.#display.style.display = 'unset';
-  
-    const exitCode = await cheerpjRunMain("net.minecraft.client.Minecraft", `/app/lwjgl/lwjgl-2.9.3.jar:/app/lwjgl/lwjgl_util-2.9.3.jar:${jarPath}`)
+		this.#intro.style.display = 'none';
+	
+		this.#progress.style.display = 'unset';
+		const jarPath = "/files/client_1.2.5.jar"
+		await downloadFileToCheerpJ(
+			"https://piston-data.mojang.com/v1/objects/4a2fac7504182a97dcbcd7560c6392d7c8139928/client.jar",
+			jarPath,
+			(downloadedBytes, totalBytes) => {
+				this.#progress.value = downloadedBytes;
+				this.#progress.max = totalBytes;
+			}
+		);
+		this.#progress.style.display = 'none';
+		this.#display.style.display = 'unset';
+	
+		const exitCode = await cheerpjRunMain("net.minecraft.client.Minecraft", `/app/lwjgl/lwjgl-2.9.3.jar:/app/lwjgl/lwjgl_util-2.9.3.jar:${jarPath}`)
 
-    this.#isRunning = false;
+		this.#isRunning = false;
 
-    return exitCode;
-  }
+		return exitCode;
+	}
 
-  /** @returns {boolean} */
-  get isRunning() {
-    return this.#isRunning;
-  }
+	/** @returns {boolean} */
+	get isRunning() {
+		return this.#isRunning;
+	}
 }
