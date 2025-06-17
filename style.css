@@ -25,7 +25,6 @@ header {
 header h1 {
   color: #c6b8b4;
   font: 48px Minecrafter;
-  transform: perspective(24px) translateZ(0) rotate3d(1, 0, 0, 2deg);
   text-shadow: 0px 5px 4px black;
 }
 
