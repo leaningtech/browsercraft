@@ -1,3 +1,4 @@
+<dialog id="popup" class="about-popup">
 	<h2>What is this</h2>
 	<p>
 		<b>Browsercraft</b> makes unmodified Minecraft run in the browser using <a href="https://cheerpj.com" target="_blank">CheerpJ</a>, a Java runtime for modern browsers.
@@ -26,3 +27,4 @@
 	<p>
 		You can also sign-up for the first <a href="https://cheerpj-the-hackathon.devpost.com" target="_blank">CheerpJ Hackathon</a>. The event theme and precise dates are still being determined, but it will be a week-long competition to be held between September and October 2025, with a £500 prize awaiting the winning team.
 	</p>
+</dialog>
