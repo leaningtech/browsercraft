@@ -1,12 +1,14 @@
 <script lang="ts">
 	import MinecraftClient from "$lib/minecraft-web";
 	import { onMount } from "svelte";
-	import { eulaAccepted, timeExpired } from "./state";
+	import { eulaAccepted, timeExpired, loadingCheerpJ } from "./state";
+	import spinnerWhite from '$lib/assets/loading-spinner-white.svg';
 
 		// The demo is limited to 3 minutes, and not intended to replace the full game
 	let timeLeft = 180;
 
 	async function startCheerpJ() {
+		$loadingCheerpJ = true;
 		await cheerpjInit({
 			version: 8,
 			javaProperties: ["java.library.path=/app/lwjgl/"],
@@ -17,6 +19,7 @@
 
 		const display = document.getElementById('display');
 		await cheerpjCreateDisplay(-1, -1, display);
+		$loadingCheerpJ = false;
 	}
 
 	async function startGame() {
@@ -45,31 +48,40 @@
 
 <h1>BROWSERCRAFT</h1>
 <div class="container">
-	<div class="intro" id="introBrowsercraft">
-		<p>
-			This is a proof-of-concept demo of Minecraft 1.2.5 running unmodified in the browser.
-		</p>
-
-		{#if !$eulaAccepted}
-			<p>
-				<input
-					type="checkbox"
-					bind:checked={$eulaAccepted}
-				/>
-				Before playing, you have to accept the <a href="https://www.minecraft.net/eula" target="_blank">Minecraft EULA</a>
-			</p>
-		{/if}
-
-		{#if $eulaAccepted}
-			<p>Clicking the button below will download the client from mojang.com.</p>
-			<button on:click={startGame}>Play!</button>
-		{/if}
-
-		<div class="disclaimer">
-			This is not an official Minecraft product. It is not approved by or associated with Mojang or Microsoft.
+	{#if $loadingCheerpJ}
+		<div class="w-full h-full flex items-center justify-center">
+			<img src={spinnerWhite} class="w-10 h-10" alt="Loading" />
+			<p class="text-center">Loading CheerpJ ...</p>
 		</div>
-	</div>
-	<progress id="progressBar" style="display: none"></progress>
+	{/if}
+	
+	{#if !$loadingCheerpJ}
+		<progress id="progressBar" style="display: none"></progress>
+		<div class="intro" id="introBrowsercraft">
+			<p>
+				This is a proof-of-concept demo of Minecraft 1.2.5 running unmodified in the browser.
+			</p>
+
+			{#if !$eulaAccepted}
+				<p>
+					<input
+						type="checkbox"
+						bind:checked={$eulaAccepted}
+					/>
+					Before playing, you have to accept the <a href="https://www.minecraft.net/eula" target="_blank">Minecraft EULA</a>
+				</p>
+			{/if}
+
+			{#if $eulaAccepted}
+				<p>Clicking the button below will download the client from mojang.com.</p>
+				<button on:click={startGame}>Play!</button>
+			{/if}
+
+			<div class="disclaimer">
+				This is not an official Minecraft product. It is not approved by or associated with Mojang or Microsoft.
+			</div>
+		</div>
+	{/if}
 
 	{#if !$timeExpired}
 		<div class="display" id="display"></div>
