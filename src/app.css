@@ -58,9 +58,11 @@ footer{
 }
 
 .container {
-	display: inline-block;
+	display: flex;
 	aspect-ratio: 4 / 3;
 	position: relative;
+	flex-direction: column;
+	align-items: center;
 
 	background: black;
 	color: #eee;
@@ -96,6 +98,7 @@ footer{
 }
 
 .intro > button {
+	font-family: system-ui;
 	padding: 0.5em 1em;
 	margin: 2em;
 }
@@ -196,29 +199,29 @@ hr.solid {
 }
 
 .about-button {
-  color: #4f46e5;
-  padding: 0.6em 1.2em;
-  font-size: 1rem;
-  border: none;
-  border-radius: 0.5em;
-  cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-  font-family: system-ui;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+	color: #4f46e5;
+	padding: 0.6em 1.2em;
+	font-size: 1rem;
+	border: none;
+	border-radius: 0.5em;
+	cursor: pointer;
+	transition: background-color 0.2s ease, transform 0.1s ease;
+	font-family: system-ui;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .about-button:hover {
-  background-color: #4338ca;
+	background-color: #4338ca;
 	color: white;
 }
 
 .about-button:active {
-  transform: scale(0.97);
+	transform: scale(0.97);
 }
 
 .about-button:focus {
-  outline: 2px solid #c7d2fe;
-  outline-offset: 2px;
+	outline: 2px solid #c7d2fe;
+	outline-offset: 2px;
 }
 
 .about-popup {
