@@ -6,6 +6,7 @@
 
 	<h2>What this is not</h2>
 	<ul>
+		<li>A replacement for the official Minecraft. The experience is limited to 3 minutes by design, please refer to <a href="https://www.minecraft.net">minecraft.net</a> for the full game.</li>
 		<li><a href="https://classic.minecraft.net" target="_blank">Minecraft Classic</a>, an alpha version of Minecraft playable in the browser</li>
 		<li>Minecraft Bedrock Edition</li>
 		<li>The latest version of Minecraft. Newer releases of Minecraft use a newer version of Java and OpenGL which we currently do not support.</li>

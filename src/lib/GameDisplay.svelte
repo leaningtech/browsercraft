@@ -43,7 +43,7 @@
 	onMount(startCheerpJ);
 </script>
 
-<h1>Browsercraft</h1>
+<h1>BROWSERCRAFT</h1>
 <div class="container">
 	<div class="intro" id="introBrowsercraft">
 		<p>
@@ -77,7 +77,7 @@
 
 	{#if $timeExpired}
 		<div class="timeout">
-			<h1>Demo timeout</h1>
+			<h1>DEMO TIMEOUT</h1>
 			<p>
 				Thanks for playing this CheerpJ demo.
 			</p>
