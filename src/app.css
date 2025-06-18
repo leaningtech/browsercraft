@@ -38,7 +38,6 @@ main {
 main h1 {
 	color: #93510f;
 	font: 52px Minecrafter;
-	transform: perspective(24px) translateZ(0) rotate3d(1, 0, 0, 2deg);
 	text-shadow: 0px 5px 4px black;
 }
 
