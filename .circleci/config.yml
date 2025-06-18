@@ -22,12 +22,17 @@ jobs:
       - run:
           name: Clone Browsercraft
           command: |
-            git clone --branch $CIRCLE_BRANCH --single-branch git@github.com:leaningtech/browsercraft.git
+            git clone --branch $CIRCLE_BRANCH --single-branch git@github.com:leaningtech/browsercraft.git browsercraft
+      - run:
+          name: Build Browsercraft
+          command: |
+            cd browsercraft
+            npm install
+            npm run build
       - run:
           name: Deploy Browsercraft
           command: |
-            cd browsercraft
-            rsync -avz --chown circleci:runtimes 404.html embed.html fonts index.html libraries lwjgl-2.9.3.jar lwjgl_util-2.9.3.jar minecraft-web.js style.css circleci@havana.leaningtech.com:browsercraft/
+            rsync -avz --chown circleci:runtimes browsercraft/build/ circleci@havana.leaningtech.com:browsercraft/
 
 workflows:
   deploy:
