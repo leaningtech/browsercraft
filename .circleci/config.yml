@@ -37,6 +37,6 @@ jobs:
 workflows:
   deploy:
     when:
-      equal: [ << pipeline.trigger_source >>, "api" ]
+      equal: [ << pipeline.trigger_source >>, "push" ]
     jobs:
       - deploy
