@@ -33,6 +33,7 @@ main {
 	padding: 0;
 	width: 100%;
 	height: 85%;
+	position: relative;
 }
 
 main h1 {
@@ -57,6 +58,13 @@ footer{
 	}
 }
 
+.loading {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
 .gh-container {
 	position: absolute;
 	right: 0%;
@@ -68,6 +76,7 @@ footer{
 	position: relative;
 	flex-direction: column;
 	align-items: center;
+	justify-content: center;
 
 	background: black;
 	color: #eee;
@@ -77,12 +86,15 @@ footer{
 	height: 500px;
 }
 
+.progress-bar {
+	position: absolute;
+	top: 0;
+}
+
 .display {
 	width: 800px;
 	height: 500px;
 	position: relative;
-	inset: 0;
-	display: none;
 }
 
 .intro {
@@ -90,7 +102,6 @@ footer{
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	height: 100%;
 }
 
 .intro > p {
@@ -163,7 +174,7 @@ hr.solid {
 	max-width: 70%;
 }
 
-.timeout {
+.timeout-info {
 	position: absolute;
 	display: flex;
 	flex-direction: column;
@@ -176,7 +187,7 @@ hr.solid {
 	background-color: rgba(0, 0, 0, 0.8);
 }
 
-.timeout > p {
+.timeout-info > p {
 	max-width: 60ch;
 }
 
