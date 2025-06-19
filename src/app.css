@@ -57,6 +57,11 @@ footer{
 	}
 }
 
+.gh-container {
+	position: absolute;
+	right: 0%;
+}
+
 .container {
 	display: flex;
 	aspect-ratio: 4 / 3;
