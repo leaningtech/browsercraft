@@ -110,7 +110,7 @@
 	<progress id="progress-bar"></progress>
 	<div id="display" class="display"></div>
 	<div id="timeout-info" class="timeout-info">
-		<h1>DEMO TIMEOUT</h1>
+		<h1 class="mc-title">DEMO TIMEOUT</h1>
 		<p>
 			Thanks for playing this CheerpJ demo.
 		</p>

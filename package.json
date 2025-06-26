@@ -23,6 +23,8 @@
 		"svelte-check": "^4.0.0",
 		"typescript": "^5.0.0",
 		"vite": "^6.2.6",
-		"vite-plugin-devtools-json": "^0.2.0"
+		"vite-plugin-devtools-json": "^0.2.0",
+		"labs": "git@github.com:leaningtech/labs.git",
+		"@oddbird/popover-polyfill": "^0.4.4"
 	}
 }
