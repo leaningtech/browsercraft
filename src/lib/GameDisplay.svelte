@@ -115,7 +115,7 @@
 			Thanks for playing this CheerpJ demo.
 		</p>
 		<p>
-			CheerpJ is a WebaAssembly JVM for the browser that can run any Java application, applet and library in the browser.
+			CheerpJ is a WebAssembly JVM for the browser that can run any Java application, applet and library in the browser.
 		</p>
 		<p>
 			Java 8, 11 and 17 are currently supported. Avanced features such as multithreading, reflection and custom classloaders are also fully supported.
