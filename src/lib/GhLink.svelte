@@ -1,4 +1,4 @@
-<div class="gh-container">	
+<div class="gh-link">	
 	<a href="https://github.com/leaningtech/browsercraft" class="github-corner" aria-label="View source on GitHub" target="_blank">
 		<svg viewBox="0 0 250 250" aria-hidden="true">
 			<path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>

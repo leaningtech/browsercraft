@@ -4,8 +4,6 @@ html, body {
 	margin: 0;
 	padding: 0;
 	font-family: system-ui, sans-serif;
-	font-size: 18px;
-	box-sizing: border-box;
 }
 
 @font-face {
@@ -13,57 +11,73 @@ html, body {
 	src: url("/fonts/minecrafter/Minecrafter.Reg.woff2"), sans-serif;
 }
 
-header {
+main {
 	background: #171615;
-	color: white;
-	padding: 1rem;
+	width: 100%;
+	line-height: 1.4;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
+	justify-content: flex-start;
 	align-items: center;
+	margin: 0;
+	padding: 0;
 }
 
-header h1 {
-	color: #c6b8b4;
-	font: 2.4rem Minecrafter;
-	text-shadow: 0px 5px 4px black;
-}
-
-main {
-	margin: 0 auto;
-	padding: 1rem;
-	max-width: 60ch;
+.nav-bar {
 	width: 100%;
-	box-sizing: border-box;
-	line-height: 1.4;
 }
 
-main h2 {
-	font-size: 1.5rem;
-	margin: 1rem 0 0.5rem;
+.title {
+	font-family: Minecrafter;
+	color: #c6b8b4;
+	text-shadow: 0px 5px 4px black;
+	font-size: 4rem;
+	margin: 0 0 1rem 0;
+	padding: 0;
 }
 
-main li {
-	margin: 0.5rem 0;
+main a {
+	color: orange;
+}
+
+main a:hover {
+	color: yellow;
+}
+
+.main-container {
+	display: flex;
+	flex: 1;
+	flex-direction: row;
+	align-items: flex-start;
+	justify-content: center;
+	max-width: 100%;
+	margin: 0 1rem 1rem 1rem;
 }
 
 .gh-container {
-	height: 10%;
-	position: absolute;
-	top: 0;
-	right: 0;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: right;
 }
 
-.gh-container svg {
+.gh-link {
+	height: 75px;
+}
+
+.gh-link svg {
 	height: 100%;
 	fill:#fff;
 	color:#151513;
 }
 
 .game-container {
-	display: inline-block;
-	position: relative;
+	display: flex;
 	aspect-ratio: 4 / 3;
+	flex-direction: column;
+	align-items: center;
+	position: relative;
 	background: black;
 	color: #eee;
 	color-scheme: dark;
@@ -138,7 +152,7 @@ progress {
 }
 
 .timeout-info > h1 {
-	font-size: 2.2rem;
+	font-size: 2rem;
 }
 
 .timeout-timer {
@@ -162,6 +176,7 @@ progress {
 }
 
 .pagecontrols {
+	display: none;
 	margin: 0.5rem 0;
 }
 
@@ -181,4 +196,84 @@ progress {
 
 .pagecontrols > *:hover svg {
 	stroke: white;
+}
+
+.tmp-cnt {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.bottom-paragraph {
+	max-width: 60ch;
+	line-height: 1.4;
+}
+
+.bottom-paragraph a:hover {
+	color: blueviolet;
+}
+
+footer {
+	width: 100%;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	font-family: system-ui;
+	font-weight: 300;
+}
+
+div#footer-links{
+	max-width: 50%;
+	display: flex;
+	justify-content:space-evenly;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 25%;
+	padding-right: 25%;
+	text-align: center;
+	position: relative;
+	font-size: 14px;
+}
+
+div#footer-logo{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+img#lt-logo{
+	width: 1.5em;
+	height: 1.5em;
+	display: inline-block;
+}
+
+p#footer-text{
+	margin-left: 0.75rem;
+	font-size: 0.875rem;
+	color: #4b4947;
+	display: inline-block;
+}
+
+hr.solid {
+	min-width: 60ch;
+}
+
+@media (max-width: 900px) {
+	html, body {
+		width: 900px;
+		font-size: 0.9rem;
+		height: auto
+	}
+	.title {
+		font-size: 3.2rem;
+	}
+	.gh-link {
+		height: 50px;
+	}
+	.main-container {
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
 }
