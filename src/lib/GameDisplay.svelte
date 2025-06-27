@@ -49,6 +49,7 @@
 				showElement(timeoutInfo);
 				document.exitPointerLock();
 				document.activeElement?.blur();
+				tryPlausible("EndDemo");
 			}
 		}, 1000);
 
