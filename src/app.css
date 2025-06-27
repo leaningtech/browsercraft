@@ -49,9 +49,11 @@ main > h1 {
 }
 
 .game-container {
-	display: inline-block;
-	position: relative;
+	display: flex;
 	aspect-ratio: 4 / 3;
+	flex-direction: column;
+	align-items: center;
+	position: relative;
 	background: black;
 	color: #eee;
 	color-scheme: dark;
@@ -68,8 +70,22 @@ main > h1 {
 	outline: none;
 }
 
-.intro {
+.loading-container {
+	width: 100%;
+	height: 100%;
+	flex-direction: column;
 	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.spinner {
+	width: 10%;
+	height: 10%;
+}
+
+.intro {
+	display: none;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
