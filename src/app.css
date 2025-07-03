@@ -14,6 +14,7 @@ html, body {
 main {
 	background: #171615;
 	width: 100%;
+	min-height: 100%;
 	line-height: 1.4;
 	display: flex;
 	flex-direction: column;
@@ -42,6 +43,19 @@ main a {
 
 main a:hover {
 	color: yellow;
+}
+
+.side-paragraph {
+	padding: 0 1rem;
+	margin-left: 1rem;
+	border: 1px solid white;
+	box-sizing: border-box;
+	color: white;
+	/* font-size: 1.1rem; */
+	overflow: auto;
+	height: 500px;
+	max-width: 60ch;
+	line-height: 1.4;
 }
 
 .main-container {
@@ -212,48 +226,41 @@ progress {
 	stroke: white;
 }
 
-.tmp-cnt {
+.footer-container {
+	width: 100%;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
 	align-items: center;
+	justify-content: flex-start;
+	margin: 0;
+	padding: 0;
+	background-color: #c7c7c2;
+	font-weight: 400;
 }
 
-.bottom-paragraph {
-	max-width: 60ch;
-	line-height: 1.4;
+.footer-container a {
+	color: blue;
 }
 
-.bottom-paragraph a:hover {
+.footer-container a:hover {
 	color: blueviolet;
 }
 
-footer {
-	width: 100%;
-	box-sizing: border-box;
-	margin: 0;
+.footer-paragraph p {
+	align-items: center;
+	max-width: 120ch;
+	font-size: 0.85rem;
+	color: #4b4947;
 	padding: 0;
-	font-family: system-ui;
-	font-weight: 300;
-}
-
-div#footer-links{
-	max-width: 50%;
-	display: flex;
-	justify-content:space-evenly;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	padding-left: 25%;
-	padding-right: 25%;
-	text-align: center;
-	position: relative;
-	font-size: 14px;
+	margin: 0;
 }
 
 div#footer-logo{
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	padding: 0;
+	margin: 0 0 0.25rem 0;
 }
 
 img#lt-logo{
@@ -267,6 +274,8 @@ p#footer-text{
 	font-size: 0.875rem;
 	color: #4b4947;
 	display: inline-block;
+	padding: 0;
+	margin: 0;
 }
 
 hr.solid {
@@ -289,5 +298,11 @@ hr.solid {
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+	}
+	.side-paragraph {
+		max-width: unset;
+		width: 800px;
+		height: 100%;
+		margin: 1rem;
 	}
 }
