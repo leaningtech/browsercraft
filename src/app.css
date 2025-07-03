@@ -94,8 +94,22 @@ main a:hover {
 	outline: none;
 }
 
-.intro {
+.loading-container {
+	width: 100%;
+	height: 100%;
+	flex-direction: column;
 	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.spinner {
+	width: 10%;
+	height: 10%;
+}
+
+.intro {
+	display: none;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
