@@ -177,10 +177,18 @@ progress {
 
 .timeout-info > p {
 	max-width: 60ch;
+	text-align: center;
+	margin: 0.75rem 0;
 }
 
 .timeout-info > h1 {
 	font-size: 2rem;
+	margin: 0;
+}
+
+.timeout-info > img {
+	width: 80%;
+	border: 1px solid white;
 }
 
 .timeout-timer {
