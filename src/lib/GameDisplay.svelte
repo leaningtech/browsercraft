@@ -13,6 +13,7 @@
 	let timer: HTMLDivElement
 	// The demo is limited to 3 minutes, and not intended to replace the full game
 	let timeLeft = 180;
+	let eulaAccepted = false;
 
 	async function startCheerpJ() {
 		await cheerpjInit({
@@ -97,11 +98,22 @@
 		<p>
 			This is a proof-of-concept demo of Minecraft 1.2.5 running unmodified in the browser.
 		</p>
-		<p>
-			Clicking the button below will download the client from mojang.com.
-			By clicking it, you agree to the <a href="https://www.minecraft.net/eula" target="_blank">Minecraft EULA</a>.
-		</p>
-		<button on:click={startGame}>Play!</button>
+
+		{#if !eulaAccepted}
+			<p>
+				<input
+					type="checkbox"
+					bind:checked={eulaAccepted}
+				/>
+				Before playing, you have to accept the <a href="https://www.minecraft.net/eula" target="_blank">Minecraft EULA</a>
+			</p>
+		{/if}
+
+		{#if eulaAccepted}		
+			<p>Clicking the button below will download the client from mojang.com.</p>
+			<button on:click={startGame}>Play!</button>
+		{/if}
+
 		<div class="disclaimer">
 			This is not an official Minecraft product. It is not approved by or associated with Mojang or Microsoft.
 		</div>
