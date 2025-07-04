@@ -16,10 +16,7 @@
 	</div>
 	<h1 class="title">BROWSERCRAFT</h1>
 	<div class="main-container">
-		<div>
-			<GameDisplay />
-			<PageControls />
-		</div>
+		<GameDisplay />
 		<SideParagraph />
 	</div>
 	<div class="footer-container">
