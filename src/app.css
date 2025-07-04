@@ -46,16 +46,14 @@ main a:hover {
 }
 
 .side-paragraph {
-	padding: 0 1rem;
+	padding: 0 0.5rem;
 	margin-left: 1rem;
 	border: 1px solid white;
 	box-sizing: border-box;
 	color: white;
-	/* font-size: 1.1rem; */
 	overflow: auto;
 	height: 500px;
-	max-width: 60ch;
-	line-height: 1.4;
+	max-width: 80ch;
 }
 
 .main-container {
@@ -286,9 +284,9 @@ p#footer-text{
 
 @media (max-width: 900px) {
 	html, body {
-		width: 900px;
 		font-size: 0.9rem;
-		height: auto
+		height: auto;
+		overflow-x: hidden;
 	}
 	.title {
 		font-size: 3.2rem;
@@ -303,8 +301,15 @@ p#footer-text{
 	}
 	.side-paragraph {
 		max-width: unset;
-		width: 800px;
 		height: 100%;
 		margin: 1rem;
+	}
+	.game-container {
+		width: 100%;
+		aspect-ratio: 4 / 3;
+	}
+	.display {
+		width: 100%;
+		aspect-ratio: 4 / 3;
 	}
 }
