@@ -3,6 +3,7 @@
 	import { tryPlausible, showElement, hideElement, formatTime } from "./utilities";
 	import spinnerWhite from '$lib/assets/loading-spinner-white.svg';
 	import ghGIF from '$lib/assets/rate-us-on-gh.gif';
+	import PageControls from './PageControls.svelte';
 
 	const pathJarMinecraft = "/files/client_1.2.5.jar";
 	const urlDownloadMinecraft = "https://piston-data.mojang.com/v1/objects/4a2fac7504182a97dcbcd7560c6392d7c8139928/client.jar";
@@ -138,10 +139,7 @@
 			Thanks for playing this CheerpJ demo.
 		</p>
 		<p>
-			<a href="https://cheerpj.com" target="_blank">CheerpJ</a> is a WebAssembly JVM for the browser that can run any Java application, applet and library in the browser.
-		</p>
-		<p>
-			Java 8, 11 and 17 are currently supported. Advanced features such as multithreading, reflection and custom classloaders are also fully supported, for more information you can join our <a href="https://discord.gg/7xXW6NAdHT" target="_blank">Discord</a>.
+			<a href="https://cheerpj.com" target="_blank">CheerpJ</a> is a WebAssembly JVM for the browser that can run any Java application, applet and library in the browser. Java 8, 11 and 17 are currently supported. Advanced features such as multithreading, reflection and custom classloaders are also fully supported, for more information you can join our <a href="https://discord.gg/7xXW6NAdHT" target="_blank">Discord</a>.
 		</p>
 		<p>
 			Want to support us? Star Browsercraft on <a href="https://github.com/leaningtech/browsercraft" target="_blank">Github</a>.
@@ -151,4 +149,5 @@
 	<div id="timeout-timer" class="timeout-timer">
 		<p>{formatTime(timeLeft)}</p>
 	</div>
+	<PageControls />
 </div>
