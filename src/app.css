@@ -32,8 +32,8 @@ main {
 	font-family: Minecrafter;
 	color: #c6b8b4;
 	text-shadow: 0px 5px 4px black;
-	font-size: 4rem;
-	margin: 0 0 1rem 0;
+	font-size: clamp(0.5rem, 2vw + 2rem, 4rem);
+	margin: 0 0 2rem 0;
 	padding: 0;
 }
 
@@ -46,16 +46,22 @@ main a:hover {
 }
 
 .side-paragraph {
-	padding: 0 1rem;
-	margin-left: 1rem;
+	padding: 0 0.5rem;
+	margin: 0 1rem 0 0.5rem;
 	border: 1px solid white;
 	box-sizing: border-box;
 	color: white;
-	/* font-size: 1.1rem; */
 	overflow: auto;
 	height: 500px;
-	max-width: 60ch;
-	line-height: 1.4;
+	max-width: 80ch;
+}
+
+.side-paragraph > h3 {
+	margin-bottom: 0;
+}
+
+.side-paragraph > p {
+	margin-top: 0;
 }
 
 .main-container {
@@ -65,7 +71,6 @@ main a:hover {
 	align-items: flex-start;
 	justify-content: center;
 	max-width: 100%;
-	margin: 0 1rem 1rem 1rem;
 }
 
 .gh-container {
@@ -88,15 +93,17 @@ main a:hover {
 
 .game-container {
 	display: flex;
-	aspect-ratio: 4 / 3;
 	flex-direction: column;
 	align-items: center;
-	position: relative;
 	background: black;
 	color: #eee;
 	color-scheme: dark;
+	position: relative;
 	width: 800px;
 	height: 500px;
+	aspect-ratio: 8 / 5;
+	margin: 0 0.5rem 0 1rem;
+	box-sizing: border-box;
 }
 
 .game-container > progress {
@@ -111,8 +118,8 @@ main a:hover {
 .loading-container {
 	width: 100%;
 	height: 100%;
-	flex-direction: column;
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 }
@@ -131,6 +138,8 @@ main a:hover {
 }
 
 .intro > p {
+	padding: 0 1rem;
+	text-align: center;
 	max-width: 60ch;
 }
 
@@ -142,12 +151,22 @@ main a:hover {
 
 .disclaimer {
 	font-size: 0.8em;
+	padding: 0 1rem;
+	text-align: center;
 	opacity: 0.5;
+}
+
+.display a {
+	color: white;
+}
+
+.display a:hover {
+	color: white;
 }
 
 .display {
 	display: none;
-	position: relative;
+	aspect-ratio: 8 / 5;
 	width: 800px;
 	height: 500px;
 	inset: 0;
@@ -163,6 +182,7 @@ progress {
 }
 
 .timeout-info {
+	display: none;
 	position: absolute;
 	flex-direction: column;
 	align-items: center;
@@ -171,7 +191,6 @@ progress {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	display: none;
 	background-color: rgba(0, 0, 0, 0.8);
 }
 
@@ -182,7 +201,7 @@ progress {
 }
 
 .timeout-info > h1 {
-	font-size: 2rem;
+	font-size: 2.75rem;
 	margin: 0;
 }
 
@@ -193,9 +212,9 @@ progress {
 
 .timeout-timer {
 	position: absolute;
-	font-size: 4rem;
+	font-size: 2.5rem;
 	margin: 0;
-	top: 0;
+	top: 2.5%;
 	right: 0;
 	display: none;
 }
@@ -213,6 +232,9 @@ progress {
 
 .pagecontrols {
 	display: none;
+	position: absolute;
+	left: 0%;
+	bottom: -10%;
 	margin: 0.5rem 0;
 }
 
@@ -242,25 +264,17 @@ progress {
 	justify-content: flex-start;
 	margin: 0;
 	padding: 0;
-	background-color: #c7c7c2;
 	font-weight: 400;
-}
-
-.footer-container a {
-	color: blue;
-}
-
-.footer-container a:hover {
-	color: blueviolet;
 }
 
 .footer-paragraph p {
 	align-items: center;
 	max-width: 120ch;
 	font-size: 0.85rem;
-	color: #4b4947;
-	padding: 0;
+	color: white;
+	padding: 0.25rem 0;
 	margin: 0;
+	text-align: center;
 }
 
 div#footer-logo{
@@ -280,31 +294,25 @@ img#lt-logo{
 p#footer-text{
 	margin-left: 0.75rem;
 	font-size: 0.875rem;
-	color: #4b4947;
+	color: white;
 	display: inline-block;
 	padding: 0;
 	margin: 0;
 }
 
-hr.solid {
+.solid {
 	min-width: 60ch;
+	color: white;
 }
 
 @media (max-width: 900px) {
-	html, body {
-		width: 900px;
-		font-size: 0.9rem;
-		height: auto
-	}
-	.title {
-		font-size: 3.2rem;
-	}
 	.gh-link {
 		height: 50px;
 	}
 	.main-container {
+		overflow: auto;
 		flex-direction: column;
-		justify-content: center;
+		justify-content: flex-start;
 		align-items: center;
 	}
 	.side-paragraph {
@@ -312,5 +320,15 @@ hr.solid {
 		width: 800px;
 		height: 100%;
 		margin: 1rem;
+	}
+	.side-paragraph > h3 {
+		font-size: 2rem;
+	}
+	.game-container {
+		margin: 0;
+	}
+	.solid {
+		min-width: unset;
+		width: 95%;
 	}
 }
