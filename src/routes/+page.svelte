@@ -3,7 +3,6 @@
 	import Nav from "labs/packages/global-navbar/src/Nav.svelte"
 	import GhLink from '$lib/GhLink.svelte';
 	import GameDisplay from '$lib/GameDisplay.svelte';
-	import PageControls from '$lib/PageControls.svelte';
 	import Footer from "$lib/Footer.svelte";
 	import SideParagraph from '$lib/SideParagraph.svelte';
 </script>
@@ -17,10 +16,7 @@
 	</div>
 	<h1 class="title">BROWSERCRAFT</h1>
 	<div class="main-container">
-		<div>
-			<GameDisplay />
-			<PageControls />
-		</div>
+		<GameDisplay />
 		<SideParagraph />
 	</div>
 	<div class="footer-container">
