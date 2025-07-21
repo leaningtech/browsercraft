@@ -103,7 +103,6 @@ main a:hover {
 	height: 500px;
 	aspect-ratio: 8 / 5;
 	margin: 0 0.5rem 0 1rem;
-	border: 1px solid white;
 	box-sizing: border-box;
 }
 
