@@ -13,7 +13,7 @@
 	</div>
 	<div class="hack-info">
 		<p>
-			Join our first <a href="https://cheerpj-the-hackathon.devpost.com" target="_blank">CheerpJ Hackathon</a> in the second half of November, exploring how <b>CheerpJ</b> can be applied to real-world science and research projects, with a <b>£500</b> prize awaiting the winning team.<br>Stay tuned for further updates!
+			Join our first <a href="https://cheerpj-the-hackathon.devpost.com" target="_blank">CheerpJ Hackathon</a> in the second half of November, exploring how <b>CheerpJ</b> can be applied to real-world science and research projects, with a <b>£500</b> prize awaiting the winning team. Join our <a href="https://discord.leaningtech.com" target="_blank">Discord</a> for further updates!
 		</p>
 	</div>
 </div>
