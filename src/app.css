@@ -38,7 +38,7 @@ main {
 }
 
 main a {
-	color: orange;
+	color: #fe900d;
 }
 
 main a:hover {
@@ -46,22 +46,39 @@ main a:hover {
 }
 
 .side-paragraph {
-	padding: 0 0.5rem;
+	padding: 0.5rem;
 	margin: 0 1rem 0 0.5rem;
 	border: 1px solid white;
 	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 	color: white;
 	overflow: auto;
 	height: 500px;
 	max-width: 80ch;
 }
 
-.side-paragraph > h3 {
-	margin-bottom: 0;
+.side-paragraph h3 {
+	margin: 0; 
 }
 
-.side-paragraph > p {
-	margin-top: 0;
+.side-paragraph p {
+	margin-top: 0; 
+	margin-bottom: 1.5rem; 
+}
+
+.hack-info {
+	border: 5px groove #fe900d;
+	margin: 0;
+	padding: 0;
+}
+
+.hack-info p {
+	text-align: center;
+	padding: 5px;
+	margin: 0;
+	box-sizing: border-box;
 }
 
 .main-container {
@@ -301,7 +318,6 @@ p#footer-text{
 }
 
 .solid {
-	min-width: 60ch;
 	color: white;
 }
 
