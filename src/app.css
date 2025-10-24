@@ -34,7 +34,7 @@ main {
 	text-shadow: 0px 5px 4px black;
 	font-size: clamp(0.5rem, 2vw + 2rem, 4rem);
 	margin: 0 0 2rem 0;
-	padding: 0;
+	padding-top: 50px;
 }
 
 main a {
@@ -69,16 +69,23 @@ main a:hover {
 }
 
 .hack-info {
-	border: 5px groove #fe900d;
+	border: 8px groove #fe900d;
 	margin: 0;
 	padding: 0;
+	width: 75%;
+	background: linear-gradient(90deg, rgba(224, 119, 119, 0) 50%, rgb(22, 11, 1) 75%);
 }
 
 .hack-info p {
 	text-align: center;
-	padding: 5px;
-	margin: 0;
+	padding: 20px;
+	margin: 2px;
+	color: white;
 	box-sizing: border-box;
+	/* font-weight: bold; */
+	/* font-size: large; */
+	font-family: Minecrafter;
+
 }
 
 .main-container {
