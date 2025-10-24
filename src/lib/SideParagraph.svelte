@@ -1,4 +1,9 @@
 <div class="side-paragraph">
+	<div class="hack-info">
+		<p>
+			Join our first <a href="https://labs.leaningtech.com/cheerpj-hackathon" target="_blank">CheerpJ Hackathon</a> in the second half of November, exploring how <b>CheerpJ</b> can be applied to real-world science and research projects, with a <b>£500</b> prize awaiting the winning team. Join our <a href="https://discord.leaningtech.com" target="_blank">Discord</a> for further updates!
+		</p>
+	</div>
 	<div>
 		<h3>What is this</h3>
 		<p>
@@ -9,11 +14,6 @@
 		<h3>How it works</h3>
 		<p>
 			<b>CheerpJ</b> is a Java Virtual Machine written in WebAssembly that runs entirely in your browser. It can execute any Java application without modification and without requiring the source code. This demo demonstrates those capabilities by running an older version (1.2.5) of Minecraft and LWJGL entirely in the browser.
-		</p>
-	</div>
-	<div class="hack-info">
-		<p>
-			Join our first <a href="https://labs.leaningtech.com/cheerpj-hackathon" target="_blank">CheerpJ Hackathon</a> in the second half of November, exploring how <b>CheerpJ</b> can be applied to real-world science and research projects, with a <b>£500</b> prize awaiting the winning team. Join our <a href="https://discord.leaningtech.com" target="_blank">Discord</a> for further updates!
 		</p>
 	</div>
 </div>
