@@ -5,6 +5,7 @@
 	import GameDisplay from '$lib/GameDisplay.svelte';
 	import Footer from "$lib/Footer.svelte";
 	import SideParagraph from '$lib/SideParagraph.svelte';
+	import HackathonInfo from '$lib/HackathonInfo.svelte';
 </script>
 
 <main>
@@ -14,6 +15,7 @@
 	<div class="gh-container">
 		<GhLink />
 	</div>
+	<HackathonInfo />
 	<h1 class="title">BROWSERCRAFT</h1>
 	<div class="main-container">
 		<GameDisplay />
