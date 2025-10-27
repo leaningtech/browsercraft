@@ -1,5 +1,10 @@
+<script lang="ts">
+	import HackathonInfo from '$lib/HackathonInfo.svelte';
+</script>
+
 <div class="side-paragraph">
 	<div>
+		<HackathonInfo />
 		<h3>What is this</h3>
 		<p>
 			Browsercraft runs unmodified Minecraft (version 1.2.5) in the browser using <a href="https://cheerpj.com" target="_blank">CheerpJ</a>, a Java runtime for modern browsers. The experience is intentionally limited to 3 minutes; please refer to <a href="https://www.minecraft.net">minecraft.net</a> for the full game.
