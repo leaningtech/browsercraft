@@ -81,10 +81,8 @@ main a:hover {
 	margin: 2px;
 	color: white;
 	box-sizing: border-box;
-	/* font-weight: bold; */
+	font-weight: bold;
 	/* font-size: large; */
-	font-family: Minecrafter;
-
 }
 
 .main-container {
