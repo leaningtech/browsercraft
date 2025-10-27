@@ -70,7 +70,8 @@ main a:hover {
 
 .hack-info {
 	border: 8px groove #fe900d;
-	margin: 0;
+	margin: 5px;
+	margin-bottom: 20px;
 	padding: 0;
 	background: linear-gradient(90deg, rgba(224, 119, 119, 0) 50%, rgb(22, 11, 1) 75%);
 }
@@ -82,7 +83,6 @@ main a:hover {
 	color: white;
 	box-sizing: border-box;
 	font-weight: bold;
-	/* font-size: large; */
 }
 
 .main-container {
