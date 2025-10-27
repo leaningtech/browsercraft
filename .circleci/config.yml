@@ -8,7 +8,7 @@ jobs:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "86:3b:c9:a6:d1:b9:a8:dc:0e:00:db:99:8d:19:c4:3e"
+            - '86:3b:c9:a6:d1:b9:a8:dc:0e:00:db:99:8d:19:c4:3e'
       - run:
           name: Add known hosts
           command: |
@@ -37,6 +37,6 @@ jobs:
 workflows:
   deploy:
     when:
-      equal: [ << pipeline.trigger_source >>, "api" ]
+      equal: [<< pipeline.trigger_source >>, 'api']
     jobs:
       - deploy

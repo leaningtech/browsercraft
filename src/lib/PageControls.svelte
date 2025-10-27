@@ -1,15 +1,15 @@
 <script>
-	import { onMount } from "svelte";
+	import { onMount } from 'svelte';
 
 	onMount(() => {
-		const share = document.getElementById("share");
+		const share = document.getElementById('share');
 		const shareData = {
-			title: "Browsercraft",
-			text: "Unmodified Minecraft running in the browser using CheerpJ. Play Minecraft in your browser!",
-			url: "https://browsercraft.cheerpj.com",
+			title: 'Browsercraft',
+			text: 'Unmodified Minecraft running in the browser using CheerpJ. Play Minecraft in your browser!',
+			url: 'https://browsercraft.cheerpj.com'
 		};
 		if (navigator.canShare?.(shareData)) {
-			share.addEventListener("click", () => navigator.share(shareData));
+			share.addEventListener('click', () => navigator.share(shareData));
 			share.style.display = 'unset';
 		}
 	});
@@ -17,7 +17,18 @@
 
 <div class="pagecontrols">
 	<button id="share" title="Share" aria-label="share on mobile">
-		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-share-2">
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			class="feather feather-share-2"
+		>
 			<circle cx="18" cy="5" r="3"></circle>
 			<circle cx="6" cy="12" r="3"></circle>
 			<circle cx="18" cy="19" r="3"></circle>

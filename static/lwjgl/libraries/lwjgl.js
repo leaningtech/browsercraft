@@ -1,6 +1,5 @@
-var r = await fetch("/lwjgl/libraries/liblwjgl.so");
+var r = await fetch('/lwjgl/libraries/liblwjgl.so');
 var buf = await r.arrayBuffer();
-export default
-{
+export default {
 	wasmModule: buf
-}
+};

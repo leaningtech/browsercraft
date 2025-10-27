@@ -1,7 +1,6 @@
 // for adblockers protection
 export function tryPlausible(msg: string) {
-	if (self.plausible)
-		plausible(msg)
+	if (self.plausible) plausible(msg);
 }
 
 export function showElement(element: HTMLElement) {

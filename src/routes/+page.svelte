@@ -1,9 +1,9 @@
 <script lang="ts">
-	import '../app.css'; 
-	import Nav from "labs/packages/global-navbar/src/Nav.svelte"
+	import '../app.css';
+	import Nav from 'labs/packages/global-navbar/src/Nav.svelte';
 	import GhLink from '$lib/GhLink.svelte';
 	import GameDisplay from '$lib/GameDisplay.svelte';
-	import Footer from "$lib/Footer.svelte";
+	import Footer from '$lib/Footer.svelte';
 	import SideParagraph from '$lib/SideParagraph.svelte';
 </script>
 
