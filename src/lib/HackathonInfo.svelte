@@ -5,3 +5,23 @@
 	</p>
 
 </div>
+
+
+<style>
+	.hack-info {
+		border: 8px groove #fe900d;
+		margin: 5px;
+		margin-bottom: 20px;
+		padding: 0;
+		background: linear-gradient(90deg, rgba(224, 119, 119, 0) 50%, rgb(22, 11, 1) 75%);
+	}
+
+	.hack-info p {
+		text-align: center;
+		padding: 10px;
+		margin: 2px;
+		color: white;
+		box-sizing: border-box;
+		font-weight: bold;
+	}
+</style>
