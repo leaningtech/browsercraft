@@ -1,10 +1,5 @@
-<script lang="ts">
-	import HackathonInfo from '$lib/HackathonInfo.svelte';
-</script>
-
 <div class="side-paragraph">
 	<div>
-		<HackathonInfo />
 		<h3>What is this</h3>
 		<p>
 			Browsercraft runs unmodified Minecraft (version 1.2.5) in the browser using <a
