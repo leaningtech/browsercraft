@@ -35,7 +35,7 @@ main {
 	text-shadow: 0px 5px 4px black;
 	font-size: clamp(0.5rem, 2vw + 2rem, 4rem);
 	margin: 0 0 2rem 0;
-	padding-top: 50px;
+	padding-top: 0px;
 }
 
 main a {
@@ -48,15 +48,16 @@ main a:hover {
 
 .side-paragraph {
 	padding: 0.5rem;
-	margin: 0 1rem 0 0.5rem;
+	margin: 0;
 	border: 1px solid white;
 	box-sizing: border-box;
 	display: flex;
 	justify-content: space-between;
 	color: white;
 	overflow: auto;
-	height: 500px;
-	max-width: 80ch;
+	flex: 1;
+	min-height: 0;
+	width: 100%;
 }
 
 .side-paragraph h3 {
@@ -75,6 +76,16 @@ main a:hover {
 	align-items: flex-start;
 	justify-content: center;
 	max-width: 100%;
+}
+
+.side-column {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	margin: 0 1rem 0 0.5rem;
+	max-width: 80ch;
+	gap: 0.5rem;
+	height: 500px;
 }
 
 .gh-container {
@@ -319,11 +330,18 @@ p#footer-text {
 		justify-content: flex-start;
 		align-items: center;
 	}
-	.side-paragraph {
+	.side-column {
 		max-width: unset;
 		width: 800px;
-		height: 100%;
 		margin: 1rem;
+		height: auto;
+	}
+
+	.side-paragraph {
+		width: 100%;
+		flex: none;
+		height: 500px;
+		margin: 0;
 	}
 	.side-paragraph > h3 {
 		font-size: 2rem;
