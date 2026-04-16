@@ -1,4 +1,4 @@
-<a href="https://browserpod.io" target="_blank" rel="noopener" class="bp-ad">
+<a href="https://www.producthunt.com/products/browserpod-for-node-js" target="_blank" rel="noopener" class="bp-ad">
 	<div class="bp-ad-inner">
 		<div class="bp-ad-logo">
 			<svg class="bp-ad-svg" viewBox="-24 -24 714 714" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -22,9 +22,9 @@
 			</svg>
 		</div>
 		<div class="bp-ad-text"> 
-			<div class="bp-ad-brand">BrowserPod</div>
-			<div class="bp-ad-tagline">Sandboxed dev environments in any browser — Perfect for AI.</div>
-			<div class="bp-ad-cta">Try now &rarr;</div>
+			<div class="bp-ad-brand">BrowserPod 2.0</div>
+			<div class="bp-ad-tagline">In-browser code sandboxes - Launching today on Product Hunt.</div>
+			<div class="bp-ad-cta">Upvote &rarr;</div>
 		</div>
 		<div class="bp-ad-scanlines"></div>
 	</div>
