@@ -15,6 +15,10 @@
 		<GameDisplay />
 		<div class="side-column">
 			<SideParagraph />
+			<div class="disclaimer">
+				This is not an official Minecraft product. It is not approved by or associated with Mojang
+				or Microsoft.
+			</div>
 		</div>
 	</div>
 	<div class="footer-container">

@@ -165,11 +165,6 @@
 			<p>Clicking the button below will download the client from mojang.com.</p>
 			<button on:click={startGame}>Play!</button>
 		{/if}
-
-		<div class="disclaimer">
-			This is not an official Minecraft product. It is not approved by or associated with Mojang or
-			Microsoft.
-		</div>
 	</div>
 	<progress id="progress-bar"></progress>
 	<div id="display" class="display"></div>
