@@ -4,7 +4,6 @@
 	import GameDisplay from '$lib/GameDisplay.svelte';
 	import Footer from '$lib/Footer.svelte';
 	import SideParagraph from '$lib/SideParagraph.svelte';
-	import BrowserPodAd from '$lib/BrowserPodAd.svelte';
 </script>
 
 <main>
@@ -15,7 +14,6 @@
 	<div class="main-container">
 		<GameDisplay />
 		<div class="side-column">
-			<BrowserPodAd />
 			<SideParagraph />
 		</div>
 	</div>
