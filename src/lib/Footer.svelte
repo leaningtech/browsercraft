@@ -16,6 +16,6 @@
 <div id="footer-logo">
 	<img id="lt-logo" src={leanTechLogo} alt="Leaning Technologies logo" />
 	<a href="https://leaningtech.com/" target="”_blank”">
-		<p id="footer-text">© 2023-2025 Leaning Technologies</p>
+		<p id="footer-text">© 2023-2026 Leaning Technologies</p>
 	</a>
 </div>
